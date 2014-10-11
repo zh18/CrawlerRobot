@@ -16,13 +16,16 @@ import com.mm.util.SystemUtil;
 
 public class Yhd extends SuperData {
 	
+	
+	
 	private int getTotal(String url){
+
 		html = spider.spider(url);
 		if (html == null) {
 			error.add(url);
 			return 1;
 		}
-		doc = Jsoup.parse(url);
+		doc = Jsoup.parse(html);
 		Elements elist = doc.select(selector.getNext());
 		Element e = null;
 		try {
@@ -53,7 +56,7 @@ public class Yhd extends SuperData {
 					name, process, String.valueOf(i));
 			
 			int total = getTotal(url);
-			for(int page=0;page<total;page++){
+			for(int page=1;page<=total;page++) {
 				for(String s:getPageProductUrls(url,page)) {
 					SystemUtil.appendFile(selector.getSavepath()+uname, s, newfile);
 					newfile = false;
@@ -85,7 +88,9 @@ public class Yhd extends SuperData {
 	private String getLast36Url(String url, int page) {
 		String first = url.substring(0, url.indexOf("com/") + 4);
 		String last = url.substring(url.indexOf("com/") + 4, url.length());
-		last = last.substring(0, last.indexOf("#"));
+		try {
+			last = last.substring(0, last.indexOf("#"));
+		}catch(Exception e){}
 		String result = first
 				+ "searchPage/"
 				+ last

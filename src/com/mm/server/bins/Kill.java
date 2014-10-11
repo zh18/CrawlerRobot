@@ -13,12 +13,13 @@ public class Kill implements Bin {
 	}
 
 	public void run(InputStream is, PrintStream os, String cmd) {
-		String name=cmd.substring(cmd.lastIndexOf(" "));
+		String name=cmd.substring(cmd.lastIndexOf(" ")).trim();
 		if(name.trim().equals("")) {
 			os.println("There doesn't have a task number");
 		}
-		if(Core.stopThread(name))
+		if(Core.stopThread(name) && Core.removeThread(name)) {
 			os.println("delete success");
+		}
 		else
 			os.println("delete error");
 	}

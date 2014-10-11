@@ -9,6 +9,8 @@ import java.net.Proxy;
 import java.net.URL;
 import java.util.Scanner;
 
+import com.mm.util.SystemUtil;
+
 public class Spider implements ISpider{
 	
 	private HttpURLConnection conn = null;
@@ -75,7 +77,7 @@ public class Spider implements ISpider{
 	}
 	
 	
-	public static void main(String[] args) {
-		System.out.println(new Spider().spider("http://list.suning.com/0-161664-25-0-0-9017.html"));
+	public static void main(String[] args) throws IOException {
+		SystemUtil.write("/home/public/Desktop/test.txt",(new Spider().spider("http://list.yhd.com/c25698-0-60326/")));
 	}
 }
