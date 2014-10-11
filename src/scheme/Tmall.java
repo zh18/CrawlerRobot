@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.mm.data.SuperData;
@@ -58,17 +59,17 @@ public class Tmall extends SuperData{
 		}
 		SystemUtil.writeColl(result, selector.getSavepath()+fname);
 	}
-
 	
-	
-	protected void pro0(int rate) throws IOException {
-		process = PRODUCT;
-		List<String> urls = SystemUtil.readLine(selector.getSavepath()+fname);
-		if(urls.size() == 0 || rate>urls.size()) return ;
-		boolean newfile = rate==0;
-		
-		for(int i=0;i<urls.size();i++){
-			
+	protected String getType(Document doc, boolean isType) {
+		if(!isType) return "";
+		StringBuffer sb = new StringBuffer();
+		elist = doc.select(selector.getClassify());
+		for(Element e:elist){
+			sb.append(e.attr("title")+"က");
 		}
+		elist = doc.select(selector.getBrand());
+		if(null != elist && elist.size() > 0)
+			sb.append(elist.get(0).text()+"က");
+		return sb.toString();
 	}
 }

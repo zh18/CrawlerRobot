@@ -101,7 +101,7 @@ public final class Core {
 			ps.println("we don't have running task here ~   :-) \n");
 			return ;
 		}
-		ps.println(String.format("%5s", "ID")+" | "+String.format("%10s", "name")+" | "+String.format("%15s","Process_name")+" | "+
+		ps.println(String.format("%5s", "ID")+" | "+String.format("%15s", "name")+" | "+String.format("%15s","Process_name")+" | "+
 				String.format("%25s", "Rate")+" | "+String.format("%10s", "Running"));
 		ps.println("----------------------------------------------------------------------------------------");
 		for(Task t:task){

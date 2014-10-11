@@ -242,7 +242,7 @@ public class SuperData implements Idata{
 		}
 		bw.close();
 		if(error.size() != 0){
-			SystemUtil.writeColl(error, new File(hfname).getParent()+File.separator+"error.txt");
+			SystemUtil.writeColl(error, selector.getSavepath()+"error.txt");
 		}
 		
 	}
