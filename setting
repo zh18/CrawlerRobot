@@ -1,1 +1,3 @@
-autoloadscheme=
+schemepath=/home/public/javaproject/schemepath/
+datapath=data
+infopath=info

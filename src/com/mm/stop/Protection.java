@@ -1,11 +1,70 @@
 package com.mm.stop;
 
-public interface Protection {
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
 
-	public void save(BreakPoint breakpoint);
-	
-	public void delete(BreakPoint breakpoint);
-	
-	public BreakPoint recover(String name);
+import com.mm.data.Idata;
+import com.mm.db.DataBase;
+import com.mm.db.dao.ProtectionDao;
+import com.mm.logger.Log;
 
+/**
+ * {@link Protection} 默认实现类 每一个scheme都有一个root，把保护现场的文件写入root文件夹中
+ * 待执行完毕，删除bk文件
+ * @author public
+ *
+ */
+
+public class Protection {
+	
+	private static Protection protection;
+	private Protection(){}
+	
+	public static Protection getInstance(){
+		if (null == protection) {
+			synchronized (Protection.class) {
+				protection = new Protection();
+			}
+		}
+		return protection;
+	}
+	
+	
+	public static void save(BreakPoint breakpoint){
+		try {
+			ProtectionDao.save(breakpoint);
+		}catch(Exception e){
+			Log.logger.error("break point file create error",e);
+		}
+	}
+	
+	public static void save(Idata data,String message){
+		save(new BreakPoint(message, new SimpleDateFormat("yyyy-MM-dd hh:mm").format(new Date()).toString(),
+				data.getBreakPoint().getWname(), data.getBreakPoint().getPname(), data.getBreakPoint().getRate()));;
+	}
+	
+	
+	public static void delete(BreakPoint breakpoint){
+		try {
+			ProtectionDao.delete(breakpoint.getWname());
+		}catch(Exception e){
+			Log.logger.warn("delete bk error", e);
+		}
+	}
+	
+	public static BreakPoint recover(String name){
+		try {
+			return ProtectionDao.readBreak(name);
+		}catch(Exception e){
+			Log.logger.error("scheme read protection "+name+" failed", e);
+		}
+		return null;
+	}
 }

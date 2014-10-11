@@ -3,64 +3,46 @@ package com.mm.server;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import com.mm.server.bin.Help;
-import com.mm.server.bin.InitCore;
-import com.mm.server.bin.Kill;
-import com.mm.server.bin.Quit;
-import com.mm.server.bin.Scheme;
-import com.mm.server.bin.TaskList;
-
-public class BinCaller {
+public class BinCaller implements Runnable{
 	
-	static List<Bin> bins = null;
+	private static List<Bin> allBins = null;
 	
-	public static List<Bin> getInstance(){
-		if (null == bins){
-			synchronized (BinCaller.class) {
-				bins = new ArrayList<Bin>();
-			}
-		}
-		return bins;
+	private InputStream is;
+	private PrintStream ps;
+	private String cmd;
+	
+	public BinCaller(InputStream is,PrintStream ps,String cmd){
+		this.is = is;
+		this.ps = ps;
+		this.cmd = cmd;
 	}
-
-	public static void call(InputStream is,OutputStream os,String cmd){
-		boolean dobin = false;
-		String maincmd = cmd;
-		try {
-			maincmd = cmd.substring(0,cmd.indexOf(" "));
-		}catch(Exception e){}
-		for(Bin b:bins){
-			if (b.getName().indexOf(maincmd)!= -1) {
+	
+	
+	public static void registerBin(Bin bin){
+		if (null == allBins) allBins = new ArrayList<Bin>();
+		allBins.add(bin);
+	}
+	
+	public void call(InputStream is,PrintStream os,String cmd){
+		String temp = cmd.split(" ")[0];
+		for(Bin b:allBins){
+			if (b.getName().split(" ")[0].startsWith(temp)){
 				b.run(is, os, cmd);
-				dobin = true;
 				break;
 			}
 		}
-		if (!dobin){
-			new PrintStream(os).println("no cmd names like "+cmd+" , please try help or -h");
-		}
+		
 	}
 	
-	
-	
-	public static void addBin(Bin bin){
-		bins.add(bin);
+	public static List<Bin> getAllBins(){
+		return allBins;
 	}
 	
-	public static void removeBin(Bin bin){
-		bins.remove(bin);
-	}
-	
-	public static int binSize(){
-		return bins.size();
-	}
-	
-	public static List<Bin> getBinList(){
-		return bins;
+	public void run(){
+		call(is, ps, cmd);
 	}
 }

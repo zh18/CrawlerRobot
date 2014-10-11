@@ -8,16 +8,29 @@ public class BreakPoint {
 	private String pname;
 	private String rate;
 	private String done;   /* 0 is done , 1 have not */
+	private transient int total;
+	
+	public BreakPoint(){
+	}
+	
 	
 	public BreakPoint(String breakreason, String time, String wname,
-			String pname, String rate,String done) {
+			String pname, String rate) {
 		this.breakreason = breakreason;
 		this.time = time;
 		this.wname = wname;
 		this.pname = pname;
 		this.rate = rate;
-		this.done = done;
 	}
+	
+	public void recover(String time, String wname,
+			String pname, String rate){
+		this.time = time;
+		this.wname = wname;
+		this.pname = pname;
+		this.rate = rate;
+	}
+	
 	public String getBreakreason() {
 		return breakreason;
 	}
@@ -64,4 +77,11 @@ public class BreakPoint {
 	public void setDone(String done){
 		this.done = done;
 	}
+	public int getTotal(){
+		return total;
+	}
+	public void setTotla(int total){
+		this.total = total;
+	}
+	
 }

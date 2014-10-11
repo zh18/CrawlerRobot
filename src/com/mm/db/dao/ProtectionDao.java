@@ -20,7 +20,7 @@ public class ProtectionDao {
 			ResultSet rs = prep.executeQuery();
 			if (rs.next()){
 				return new BreakPoint(rs.getString("breakreason"), rs.getString("time"), rs.getString("wname"), 
-						rs.getString("pname"), rs.getString("rate"), rs.getString("done"));
+						rs.getString("pname"), rs.getString("rate"));
 			}
 		}catch(Exception e){
 			Log.logger.warn("get break point error", e);
@@ -37,13 +37,12 @@ public class ProtectionDao {
 				update(breakpoint);
 			}
 			else {
-				prep = conn.prepareStatement("insert into bp (breakreason,time,wname,pname,rate,done) values (?,?,?,?,?,?)");
+				prep = conn.prepareStatement("insert into bp (breakreason,time,wname,pname,rate) values (?,?,?,?,?)");
 				prep.setString(1, breakpoint.getBreakreason());
 				prep.setString(2, breakpoint.getTime());
 				prep.setString(3, breakpoint.getWname());
 				prep.setString(4, breakpoint.getPname());
 				prep.setString(5, breakpoint.getRate());
-				prep.setString(6, breakpoint.getDone());
 				prep.executeUpdate();
 			}
 		}catch(Exception e){

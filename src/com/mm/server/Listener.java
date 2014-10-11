@@ -11,7 +11,6 @@ public class Listener implements Runnable {
 	private Socket socket;
 	private Shell shell;
 	
-	
 	public Listener(Socket socket){
 		this.socket = socket;
 		shell = new Shell();
@@ -24,7 +23,7 @@ public class Listener implements Runnable {
 		try {
 			in = socket.getInputStream();
 			os = socket.getOutputStream();
-			shell.shell(in, os);
+			shell.shell(socket);
 			in.close();
 			os.close();
 			socket.close();

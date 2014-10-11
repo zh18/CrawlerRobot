@@ -1,31 +1,25 @@
 package com.mm.server;
 
-
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import com.mm.db.DataBase;
+import com.mm.logger.Log;
 
-/**
- * I don't what i should say
- * 
- * @author zh
- * @version 0.1
- * @since Sep 26 , 2014
- */
-public class Shell {
+public class Shell{
 	
-	private String gclass,iclass;
-	private DataBase db;
 	
-	public void shell(InputStream is,OutputStream os){
-		String name = "";
+	public void shell(Socket s) throws Exception{
+		InputStream is = s.getInputStream();
+		PrintStream ps = new PrintStream(s.getOutputStream());
+		String name = null;
 		Scanner scan = new Scanner(is);
-		PrintStream ps = new PrintStream(os);
 		String cmd = null;
 		if ((name=demandLogin(scan,ps))!=null) {
 			ps.println("\n Welcome to Crawler Robot ! ");
@@ -36,9 +30,12 @@ public class Shell {
 					e.printStackTrace();
 				}
 				cmd = scan.nextLine();
+				if (cmd.equals("")) continue;
 				if (cmd.equals("quit") || cmd.equals("-q")) 
 					break;
-				BinCaller.call(is,os,cmd);
+//				new Thread(new BinCaller(is,ps,cmd)).start();
+				new BinCaller(is, ps, cmd).run();
+//				ps.flush();
 			}
 		}
 	}
@@ -60,21 +57,5 @@ public class Shell {
 			return true;
 		}
 		return false;
-	}
-	
-	public String getGclass() {
-		return gclass;
-	}
-
-	public void setGclass(String gclass) {
-		this.gclass = gclass;
-	}
-
-	public String getIclass() {
-		return iclass;
-	}
-
-	public void setIclass(String iclass) {
-		this.iclass = iclass;
 	}
 }

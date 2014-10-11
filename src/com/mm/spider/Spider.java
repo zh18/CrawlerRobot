@@ -19,6 +19,12 @@ public class Spider implements ISpider{
 		StringBuffer content = new StringBuffer();
 		try {
 			conn = getConnection(proxy, url);
+			
+			conn.setRequestProperty("User-Agent",
+					"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0");
+//			conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+//			conn.setRequestProperty("Referer", "http://www.suning.com/");
+//			conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
 			conn.connect();
 			String charset = conn.getContentType();
 			if(charset == null || charset.indexOf('=') < 0)
@@ -66,5 +72,10 @@ public class Spider implements ISpider{
 		conn.setReadTimeout(5000);//read timeout 5s
 		// setting headers
 		return conn;
+	}
+	
+	
+	public static void main(String[] args) {
+		System.out.println(new Spider().spider("http://list.suning.com/0-161664-25-0-0-9017.html"));
 	}
 }

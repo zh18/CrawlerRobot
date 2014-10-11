@@ -21,9 +21,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import org.springframework.beans.factory.parsing.Problem;
 
-import com.mm.datagetter.Selectors;
 import com.mm.logger.Log;
 
 public class SystemUtil {
@@ -103,29 +101,30 @@ public class SystemUtil {
 		}
 	}
 	
-	
-	public static Selectors getSelectors(String name){
-		Properties pro = new Properties();
-		String base = "/home/public/javaproject/CrawlerRobot/bin/";
-		try {
-			pro.load(new FileInputStream(base+SYS.SYS_DG_SCHEME_FLODER+name+"."+"properties"));
-		}catch(Exception e){
-			Log.logger.error("Load Properties error", e);
-		}
-		String rootpath = pro.getProperty("rootpath");
-		String fselects = pro.getProperty("fselects");
-		String [] fs = fselects.split(",");
-		String basepath = pro.getProperty("basepath");
-		String products = pro.getProperty("products");
-		String next = pro.getProperty("next");
-		boolean fbase = Boolean.parseBoolean(pro.getProperty("fbase"));
-		boolean pbase = Boolean.parseBoolean(pro.getProperty("pbase"));
-		boolean nbase = Boolean.parseBoolean(pro.getProperty("nbase"));
-		return new Selectors(rootpath,basepath, fs, products, next, fbase, pbase, nbase);
+	/**
+	 * 添加新的一行到文件尾部
+	 * <pre>
+	 * 频繁的open connection and close connection
+	 * </pre>
+	 * @param path
+	 * @param line
+	 * @param newfile 是否为新文件？<tt>true</tt>新文件   <tt>false</tt>原来的旧文件
+	 * @throws IOException
+	 */
+	public static synchronized void appendFile(String path,String line,boolean newfile) throws IOException{
+		//如果想要新文件的话，则把原来的删除
+		if (newfile) new File(path).delete();
+		RandomAccessFile raf = new RandomAccessFile(path, "rw");
+		raf.seek(raf.length());
+		raf.write((line+"\n").getBytes());
+		raf.close();
 	}
 	
 	public static void writeColl(Collection col,String path){
 		BufferedWriter bw = null;
+		File f = new File(path);
+		File cf = new File(f.getParent());
+		if (!cf.exists()) cf.mkdirs();
 		try {
 			bw = new BufferedWriter(new FileWriter(path));
 			for(Object obj:col){
@@ -148,5 +147,47 @@ public class SystemUtil {
 			result[i][1] = line[1];
 		}
 		return result;
+	}
+	
+	public static List<String> getAllKeys(String path){
+		List<String> temp = readLine(path);
+		List<String> result = new ArrayList<String>();
+		for(int i=0;i<temp.size();i++){
+			if (temp.get(i).trim().equals("") || temp.get(i).trim().startsWith("#")) continue;
+//			temp.set(i, temp.get(i).substring(0, temp.get(i).indexOf("=")));
+			result.add(temp.get(i));
+		}
+		return result;
+	}
+	
+	public static int getLoc(String [] src,String target){
+		for(int i=0;i<src.length;i++){
+			if (src[i].indexOf(target) != -1) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public static String printAL(String [] src,String insert){
+		StringBuilder sb = new StringBuilder();
+		for(String s:src){
+			sb.append(s+insert);
+		}
+		return sb.toString();
+	}
+	public static String printAL(List<String> src,String insert){
+		StringBuilder sb = new StringBuilder();
+		for(String s:src){
+			sb.append(s+insert);
+		}
+		return sb.toString();
+	}
+	
+	
+	public static void write(String path,String line) throws IOException {
+		BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+		bw.write(line);
+		bw.close();
 	}
 }
