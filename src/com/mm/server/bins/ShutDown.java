@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 
 import com.mm.core.Core;
 import com.mm.server.Bin;
+import com.mm.server.StartServer;
+import com.mm.util.Times;
 
 public class ShutDown implements Bin {
 
@@ -15,11 +17,12 @@ public class ShutDown implements Bin {
 	}
 
 	public void run(InputStream is, PrintStream os, String cmd) {
-		os.println("Server is closing");
+		os.println("Server is closing ...");
 		for(String s:Core.getThreadIds()){
 			Core.stopThread(s);
 			os.println("saved "+s);
 		}
+		os.println("server had run "+Times.getTimes(StartServer.times, System.currentTimeMillis()));
 		System.exit(0);
 	}
 

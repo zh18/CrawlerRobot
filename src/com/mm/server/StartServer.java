@@ -14,6 +14,7 @@ public class StartServer {
 	private final static int PORT = 9998;
 	private static ServerSocket ss = null;
 	private static Socket s = null;
+	public static long times = 0L;
 	
 	// 启动监听程序
 	public static void startListener() {
@@ -63,6 +64,7 @@ public class StartServer {
 	}
 	
 	public static void main(String[] args) {
+		times = System.currentTimeMillis();
 		reboot();
 	}
 	
