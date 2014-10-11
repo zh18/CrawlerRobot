@@ -17,7 +17,7 @@ public class Merge implements Bin {
 	public void run(InputStream is, PrintStream os, String cmd) {
 		String temp = cmd;
 		try {
-			temp = temp.substring(temp.indexOf(":")+1).trim();
+			temp = temp.substring(temp.indexOf("mg")+2).trim();
 			String lines[] = temp.split(" ");
 			//src //dest
 			SystemUtil.merge(lines[0], lines[1]);
