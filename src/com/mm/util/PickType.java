@@ -34,7 +34,6 @@ public class PickType {
 			}
 			else if (f.getName().indexOf(e.getName()) != -1){
 				e.exe(f);
-
 			}
 		}
 	}

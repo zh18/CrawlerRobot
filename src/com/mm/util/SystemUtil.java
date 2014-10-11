@@ -1,9 +1,12 @@
 package com.mm.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
 
 import com.mm.logger.Log;
 
@@ -77,6 +79,26 @@ public class SystemUtil {
 		raf.seek(raf.length());
 		raf.writeBytes(line+"\n");
 		raf.close();
+	}
+	
+	public static void appendFile(String path,Collection<String> col) throws IOException {
+		RandomAccessFile raf = new RandomAccessFile(path,"rw");
+		raf.seek(raf.length());
+		for(String s:col){
+			raf.write((s+"\n").getBytes());
+		}
+		raf.close();
+	}
+	
+	public static void appendFile(String path,File dpath) throws IOException {
+		RandomAccessFile raf = new RandomAccessFile(path,"rw");
+		BufferedReader br = new BufferedReader(new FileReader(dpath));
+		String line="";
+		while((line = br.readLine()) != null){
+			raf.write((line+"\n").getBytes());
+		}
+		raf.close();
+		br.close();
 	}
 	
 	/**
@@ -184,6 +206,53 @@ public class SystemUtil {
 		return sb.toString();
 	}
 	
+	
+	public static synchronized boolean merge(String src,String dest) throws IOException{
+		File [] srcf=null, destf=null;
+		if(!(new File(src).isDirectory() && new File(dest).isDirectory())) return false; 
+		srcf = new File(src).listFiles();
+		destf = new File(dest).listFiles();
+		boolean flag = false;
+		for(int i=0;i<srcf.length;i++){
+			String name = srcf[i].getName();
+			for(int j=0;j<destf.length;j++){
+				if(name.equals(destf[j]))
+					flag=true;
+			}
+			if(!flag) return false;
+			if(srcf[i].isFile()){
+				for(int j=0;j<destf.length;j++){
+					if(srcf[i].getName().equals(destf[j].getName())){
+						appendFile(srcf[i].getAbsolutePath(), destf[j]);
+					}
+				}
+			}
+			else if(srcf[i].isDirectory()){
+				for(int j=0;j<destf.length;j++){
+					if(srcf[i].getName().equals(destf[j].getName())){
+						File [] srcftemp = srcf[i].listFiles();
+						for(File temp:srcftemp){
+							copyFile(temp,destf[j].getAbsolutePath());
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	// targe 多线程复制
+	public static synchronized void copyFile(File file,String path) throws IOException {
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path+File.separator+file.getName()));
+		BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+		byte buffer[]=new byte[4096];
+		int size = 0;
+		while((size = bis.read(buffer)) != -1){
+			bos.write(buffer, 0, size);
+		}
+		bos.close();
+		bis.close();
+	}
 	
 	public static void write(String path,String line) throws IOException {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(path));
