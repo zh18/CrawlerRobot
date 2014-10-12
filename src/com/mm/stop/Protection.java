@@ -7,9 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
+import com.mm.core.Core;
 import com.mm.data.Idata;
 import com.mm.db.DataBase;
 import com.mm.db.dao.ProtectionDao;
@@ -36,6 +39,9 @@ public class Protection {
 		return protection;
 	}
 	
+	public static BreakPoint read(String name){
+		return protection.read(name);
+	}
 	
 	public static void save(BreakPoint breakpoint){
 		try {
@@ -57,6 +63,14 @@ public class Protection {
 		}catch(Exception e){
 			Log.logger.warn("delete bk error", e);
 		}
+	}
+	
+	public static List<String> seeAllBreakPoint(){
+		List<String> result = new ArrayList<String>();
+		for(BreakPoint bp:ProtectionDao.seeAll()){
+			result.add(bp.toString());
+		}
+		return result;
 	}
 	
 	public static BreakPoint recover(String name){

@@ -3,6 +3,8 @@ package com.mm.db.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.mm.db.ConnSQL;
 import com.mm.logger.Log;
@@ -27,6 +29,23 @@ public class ProtectionDao {
 			return null;
 		}
 		return null;
+	}
+	
+	public static List<BreakPoint> seeAll(){
+		List<BreakPoint> result = new ArrayList<BreakPoint>();
+		Connection conn = ConnSQL.getInstance("root", "root");
+		PreparedStatement prep = null;
+		try {
+			prep = conn.prepareStatement("select * from bp");
+			ResultSet rs = prep.executeQuery();
+			while(rs.next()){
+				result.add(new BreakPoint(rs.getString("breakreason"), rs.getString("time"), rs.getString("wname"), 
+						rs.getString("pname"), rs.getString("rate")));
+			}
+		}catch(Exception e){
+			Log.logger.warn("See all breakpoint error", e);
+		}
+		return result;
 	}
 	
 	public static void save(BreakPoint breakpoint){

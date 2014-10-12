@@ -261,6 +261,10 @@ public class SystemUtil {
 	}
 	
 	
-	
+	public static String readProperties(String path,String key) throws IOException {
+		Properties prop = new Properties();
+		prop.load(new FileInputStream(path));
+		return prop.getProperty(key);
+	}
 	
 }

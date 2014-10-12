@@ -1,6 +1,6 @@
 /**
- * @author public
- *
+ * @author zh
+ * @version 0.1
  */
 package com.mm.util;
 
@@ -26,6 +26,9 @@ public class PickType {
 		
 	private final static int MAX_F = 30;
 	
+	/*
+	 *  match file should be instance with match method.
+	 */
 	public static void pickfile(File file,Exe e) throws Exception {
 		List<String> temp = null;
 		for(File f:file.listFiles()){
