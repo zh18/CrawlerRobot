@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import com.mm.core.Core;
+import com.mm.db.DataBase;
 import com.mm.logger.Log;
 import com.mm.util.SYS;
 import com.mm.util.SystemUtil;
@@ -34,7 +35,8 @@ public class StartServer {
 	}
 	
 	public static void registerBins(){
-		String file = "/home/public/javaproject/CrawlerRobot/bin/";
+		String file = DataBase.getString("syspath");
+		System.out.println(file+SYS.SYS_BIN_FLODER);
 		File files[] = new File(file+SYS.SYS_BIN_FLODER).listFiles();
 		SystemUtil.loadClass(file+SYS.SYS_BIN_FLODER, file, SYS.SYS_BIN);
 		for(File f:files){

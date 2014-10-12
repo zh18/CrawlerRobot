@@ -80,13 +80,19 @@ public class SuperData implements Idata{
 	private void fromwhere(String process,String rate) throws Exception {
 		if (null == process || process.equals("#"))
 			process = FIRST;
-		switch(process){
-		case FIRST:
+		if(process.equals(FIRST)){
 			first0();
-			rate = "0";
-		case PRODUCT:
+			rate="0";
+			pro0(0);
+			download(0);
+			done();
+		}
+		else if(process.equals(PRODUCT)){
 			pro0(Integer.parseInt(rate));
-		case DOWNLOAD:
+			download(0);
+			done();
+		}
+		else if(process.equals(DOWNLOAD)){
 			download(Integer.parseInt(rate));
 			done();
 		}
@@ -279,12 +285,10 @@ public class SuperData implements Idata{
 	
 	//----------------------------------check uname fname 是否存在
 	private boolean check(String part){
-		switch(part){
-		case PRODUCT:
+		if(part.equals(PRODUCT))
 			return check0(selector.getSavepath()+fname);
-		case DOWNLOAD:
+		else if(part.equals(DOWNLOAD))
 			return check0(selector.getSavepath()+uname);
-		}
 		return false;
 	}
 	

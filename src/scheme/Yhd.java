@@ -15,9 +15,6 @@ import com.mm.data.SuperData;
 import com.mm.util.SystemUtil;
 
 public class Yhd extends SuperData {
-	
-	
-	
 	private int getTotal(String url){
 
 		html = spider.spider(url);

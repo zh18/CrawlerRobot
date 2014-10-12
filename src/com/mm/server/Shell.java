@@ -26,6 +26,7 @@ public class Shell{
 			for(;;){
 				try {
 					ps.print(name+"@"+InetAddress.getLocalHost().getHostName().toString()+":~$ ");
+					ps.flush();
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				}
@@ -43,8 +44,10 @@ public class Shell{
 	public String demandLogin(Scanner scan,PrintStream ps){
 		ps.println("Please input UserName , Password");
 		ps.print("Account :");
+		ps.flush();
 		String name = scan.nextLine();
 		ps.print("Password:");
+		ps.flush();
 		String pwd = scan.nextLine();
 		if (login(name.trim(), pwd.trim())){
 			return name.trim();
