@@ -16,6 +16,7 @@ import com.mm.util.SystemUtil;
 
 public class TaoBao extends SuperData{
 
+	String jsonnum = "";
 	
 	protected void first0() {
 		process = FIRST;
@@ -109,7 +110,7 @@ public class TaoBao extends SuperData{
 		String id=getId(url);
 		String spage=String.valueOf(page*95);
 		
-		return head+"?json=on&cat="+id+"&style=grid&pSize="+spage+"&callback=jsonp68";
+		return head+"?json=on&cat="+id+"&style=grid&pSize="+spage;
 	}
 	
 	private int getTotal(String json){
@@ -160,7 +161,7 @@ public class TaoBao extends SuperData{
 					s = s.substring(s.indexOf("\"")+1);
 					s = s.substring(0, s.lastIndexOf("\""));
 					if(s.indexOf(":")==-1 && s.indexOf("\"") == -1 && !s.trim().equals(""))
-						result.add(base+"?json=on&cat="+s+"&style=gridpSize=95&callback=json68");
+						result.add(base+"?json=on&cat="+s+"&style=gridpSize=95");
 				}
 			}
 		}catch(Exception e){
@@ -180,17 +181,14 @@ public class TaoBao extends SuperData{
 					name, process, String.valueOf(i));
 			url = getJsonUrl(url, 0);
 			html = spider.spider(url);
-			if(html == null) error.add(url);
+			if(html == null) {
+				error.add(url);
+				continue;
+			}
 
 			result.addAll(getF(url, html));
 		}
 		if(times==0) return result;
 		return rotine(result,times);
-	}
-	
-	
-	public static void main(String[] args) throws Exception {
-		String url = "http://list.taobao.com/itemlist/market/baby.htm?json=on&cat=50005998&style=grid&pSize=0&callback=jsonp68";
-		String json = new Spider().spider(url);
 	}
 }

@@ -36,7 +36,6 @@ public class StartServer {
 	
 	public static void registerBins(){
 		String file = DataBase.getString("syspath");
-		System.out.println(file+SYS.SYS_BIN_FLODER);
 		File files[] = new File(file+SYS.SYS_BIN_FLODER).listFiles();
 		SystemUtil.loadClass(file+SYS.SYS_BIN_FLODER, file, SYS.SYS_BIN);
 		for(File f:files){

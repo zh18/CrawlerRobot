@@ -54,6 +54,7 @@ public class Yhd extends SuperData {
 			
 			int total = getTotal(url);
 			for(int page=1;page<=total;page++) {
+				System.out.println(page);
 				for(String s:getPageProductUrls(url,page)) {
 					SystemUtil.appendFile(selector.getSavepath()+uname, s, newfile);
 					newfile = false;

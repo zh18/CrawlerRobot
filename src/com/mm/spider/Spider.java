@@ -24,12 +24,14 @@ public class Spider implements ISpider{
 			
 			conn.setRequestProperty("User-Agent",
 					"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0");
-//			conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+			conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
 //			conn.setRequestProperty("Referer", "http://www.suning.com/");
 //			conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
 			conn.connect();
 			String charset = conn.getContentType();
 			if(charset == null || charset.indexOf('=') < 0)
+				charset = "gbk";
+			else if(charset.equalsIgnoreCase("gbk"))
 				charset = "gbk";
 			else 
 				charset = charset.substring(charset.indexOf('=') + 1).trim();
@@ -78,6 +80,7 @@ public class Spider implements ISpider{
 	
 	
 	public static void main(String[] args) throws IOException {
-		SystemUtil.write("/home/public/Desktop/test.txt",(new Spider().spider("http://list.yhd.com/c25698-0-60326/")));
+		SystemUtil.write("/home/public/Desktop/test.txt",
+				(new Spider().spider("http://list.tmall.com/search_product.htm?spm=a220m.1000858.0.0.VKMbK2&cat=50072285&q=%D6%BD%C6%B7&sort=s&style=g&search_condition=7&from=sn_1_rightnav&active=1&industryCatId=50072341#J_crumbs")));
 	}
 }

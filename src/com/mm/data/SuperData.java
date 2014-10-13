@@ -162,6 +162,7 @@ public class SuperData implements Idata{
 			do {
 				try {
 					html = spider.spider(url);
+					SystemUtil.write("/home/public/Desktop/test.txt", html);
 				}catch(Exception e){
 					error.add(url);
 					continue;
@@ -203,6 +204,7 @@ public class SuperData implements Idata{
 		String temp = null;
 		for(Element e:elist){
 			temp = e.text();
+			temp = temp.replaceAll("[(\\d)]", "");
 			if(temp.indexOf(">") != -1 || temp.indexOf("<") != -1) continue;
 			bs.append(temp+"က");
 		}
