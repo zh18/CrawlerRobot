@@ -10,6 +10,13 @@ import com.mm.server.Bin;
 import com.mm.server.StartServer;
 import com.mm.util.Times;
 
+/**
+ * 关闭虚拟机 显示运行时间
+ * 
+ * @author zh
+ * @version 0.1
+ * @since Oct 13,2014
+ */
 public class ShutDown implements Bin {
 
 	public String getName() {

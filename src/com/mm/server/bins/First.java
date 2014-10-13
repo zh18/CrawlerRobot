@@ -5,6 +5,14 @@ import java.io.PrintStream;
 
 import com.mm.server.Bin;
 
+/**
+ * 直接开始下载product url的环节
+ * 
+ * 当然前提是有first文件
+ * @author zh
+ * @version 0.1
+ * @since Oct 13,2014
+ */
 public class First implements Bin {
 
 	public String getName() {

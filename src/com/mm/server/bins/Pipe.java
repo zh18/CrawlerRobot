@@ -5,6 +5,13 @@ import java.io.PrintStream;
 
 import com.mm.server.Bin;
 
+/**
+ * 命令队列，可以把命令插入到队列中，一个一个的执行
+ * 
+ * @author zh
+ * @version 0.1
+ * @since Oct 13,2014
+ */
 public class Pipe implements Bin {
 
 	public String getName() {

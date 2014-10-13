@@ -6,6 +6,12 @@ import java.io.PrintStream;
 import com.mm.core.Core;
 import com.mm.server.Bin;
 
+/**
+ * 杀死task并把这个task移出队列
+ * @author zh
+ * @version 0.1
+ * @since Oct 13,2014
+ */
 public class Kill implements Bin {
 
 	public String getName() {
