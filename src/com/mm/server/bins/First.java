@@ -7,10 +7,8 @@ import com.mm.server.Bin;
 
 public class First implements Bin {
 
-	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "first : series cmd of data getter one step - get categrey url";
 	}
 
 	@Override

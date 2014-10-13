@@ -7,13 +7,10 @@ import com.mm.server.Bin;
 
 public class Download implements Bin {
 
-	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "download : series cmd of data getter one step - download html pages";
 	}
 
-	@Override
 	public void run(InputStream is, PrintStream os, String cmd) {
 		// TODO Auto-generated method stub
 

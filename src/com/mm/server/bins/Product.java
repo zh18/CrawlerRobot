@@ -7,13 +7,10 @@ import com.mm.server.Bin;
 
 public class Product implements Bin {
 
-	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "pro : series cmd of data getter one step - get products url";
 	}
 
-	@Override
 	public void run(InputStream is, PrintStream os, String cmd) {
 		// TODO Auto-generated method stub
 
