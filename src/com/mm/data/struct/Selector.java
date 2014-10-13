@@ -10,6 +10,11 @@ public class Selector {
 	public final static String ROOT="rootpath",
 			FS="fselects",PS="products",NS="next",SP="savepath",
 			FB="fbase",NB="nbase",PB="pbase",NAME="name",CS="classify",BD="brand";
+	public final static String TS="title",
+			PRICES="price",
+			IMGS = "imgs",
+			TYPE = "type",
+			MURL = "murl";
 	
 	
 	private String name;
@@ -26,7 +31,11 @@ public class Selector {
 	private String pbase;
 	private String nbase;
 	
-	
+	private String title;
+	private String price;
+	private String imgs;
+	private String type;
+	private String murl;
 	
 	
 	
@@ -267,6 +276,122 @@ public class Selector {
 
 	public void setNbase(String nbase) {
 		this.nbase = nbase;
+	}
+
+
+	
+
+
+
+	public Selector(String name, String [] rootpath, String[] fselects,
+			String products, String next, String savepath, String classify,
+			String brand, String fbase, String pbase, String nbase,
+			String title, String price, String imgs, String type, String murl) {
+		super();
+		this.name = name;
+		this.rootpath = new ArrayList<String>();
+		for(String s:rootpath) this.rootpath.add(s);
+		this.fselects = fselects;
+		this.products = products;
+		this.next = next;
+		this.savepath = savepath;
+		this.classify = classify;
+		this.brand = brand;
+		this.fbase = fbase;
+		this.pbase = pbase;
+		this.nbase = nbase;
+		this.title = title;
+		this.price = price;
+		this.imgs = imgs;
+		this.type = type;
+		this.murl = murl;
+	}
+
+	
+	
+	public String getTitle() {
+		return title;
+	}
+
+
+
+
+
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+
+
+
+
+	public String getPrice() {
+		return price;
+	}
+
+
+
+
+
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
+
+
+
+
+
+
+	public String getImgs() {
+		return imgs;
+	}
+
+
+
+
+
+
+	public void setImgs(String imgs) {
+		this.imgs = imgs;
+	}
+
+
+
+
+
+
+	public String getType() {
+		return type;
+	}
+
+
+
+
+
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
+
+
+
+
+	public String getMurl() {
+		return murl;
+	}
+
+
+
+
+
+
+	public void setMurl(String murl) {
+		this.murl = murl;
 	}
 
 

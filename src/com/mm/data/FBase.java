@@ -28,6 +28,7 @@ public abstract class FBase implements FormatterBase {
 	protected String name,process;
 	protected static final String iname=DataBase.getString("iname");
 	protected static final String hfname=DataBase.getString("hname");
+	protected static final String tname = DataBase.getString("tname");
 	protected static final String mark = "ကကက";
 	protected BreakPoint breakpoint;
 	protected SpiderFactory factory;
@@ -43,10 +44,10 @@ public abstract class FBase implements FormatterBase {
 		Document doc = Jsoup.parse(html);
 		String url = getUrl(content);
 		String murl = getMurl(url);
-		String price = getPrice(doc,"b.myPrice em");
-		String type = getType(doc,"div.crumb a");
-		String name = getName(doc,"div.promotionMiddleTop h1");
-		List<String> imgs = getImgs(doc, "ul#image_list li img");
+		String price = getPrice(doc,selector.getPrice());
+		String type = getType(doc,selector.getType());
+		String name = getName(doc,selector.getTitle());
+		List<String> imgs = getImgs(doc, selector.getImgs());
 		if (null == type || "".equals(type)) return null;
 		if (imgs.size() == 0) return null;
 		return new Element(url,murl,price,name,imgs,type);
@@ -94,11 +95,6 @@ public abstract class FBase implements FormatterBase {
 		elist = doc.select(cssQuery);
 		if (elist.size() == 0) return "";
 		String name = elist.text();
-//		name = name.replaceAll("\\\\\n", "");
-//		try {
-//			name = name.substring(name.indexOf("about")+5, name.length());
-			
-//		}catch(Exception e){}
 		name = name.trim();
 		return name;
 	}
@@ -151,7 +147,6 @@ public abstract class FBase implements FormatterBase {
 	
 	public String getPrice(Document doc,String cssQuery){
 		elist = doc.select(cssQuery);
-//		System.out.println(elist.size());
 	 	if (elist.size() == 0) return "0";
 		return elist.text();
 	}
@@ -161,7 +156,7 @@ public abstract class FBase implements FormatterBase {
 		String line = "";
 		String temp = "";
 		try {
-			br = new BufferedReader(new FileReader(path+"type.txt"));
+			br = new BufferedReader(new FileReader(path+tname));
 			while ((line = br.readLine()) != null){
 				if (line.indexOf(id) != -1){
 					temp = line;
@@ -195,7 +190,7 @@ public abstract class FBase implements FormatterBase {
 				name, DONE, "0");
 	} 
 	
-	private void makeinfo(int rate) throws IOException {
+	private synchronized void makeinfo(int rate) throws IOException {
 		process = INFO;
 		boolean newfile = rate==0;
 		String path = selector.getSavepath()+hfname;
