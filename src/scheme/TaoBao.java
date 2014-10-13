@@ -161,7 +161,7 @@ public class TaoBao extends SuperData{
 					s = s.substring(s.indexOf("\"")+1);
 					s = s.substring(0, s.lastIndexOf("\""));
 					if(s.indexOf(":")==-1 && s.indexOf("\"") == -1 && !s.trim().equals(""))
-						result.add(base+"?json=on&cat="+s+"&style=gridpSize=95");
+						result.add(base+"?json=on&cat="+s+"&style=grid&pSize=95");
 				}
 			}
 		}catch(Exception e){

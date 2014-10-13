@@ -81,6 +81,6 @@ public class Spider implements ISpider{
 	
 	public static void main(String[] args) throws IOException {
 		SystemUtil.write("/home/public/Desktop/test.txt",
-				(new Spider().spider("http://list.tmall.com/search_product.htm?spm=a220m.1000858.0.0.VKMbK2&cat=50072285&q=%D6%BD%C6%B7&sort=s&style=g&search_condition=7&from=sn_1_rightnav&active=1&industryCatId=50072341#J_crumbs")));
+				(new Spider().spider("http://www.amazon.com/s/ref=lp_283155_nr_n_0/182-4196846-6490334?rh=n%3A283155%2Cn%3A!1000%2Cn%3A1&bbn=1000&ie=UTF8&qid=1413197310&rnid=1000")));
 	}
 }
