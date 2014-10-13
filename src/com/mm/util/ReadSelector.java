@@ -89,7 +89,7 @@ public class ReadSelector {
 		if(! num.trim().equals("0")){
 			return findValue(valname,"0",lines);
 		}
-		return null;
+		return "";
 	}
 	
 	public static void main(String[] args) {
