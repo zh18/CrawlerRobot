@@ -82,7 +82,6 @@ public class SuperData implements Idata{
 			process = FIRST;
 		if(process.equals(FIRST)){
 			first0();
-			rate="0";
 			pro0(0);
 			download(0);
 			done();
@@ -162,7 +161,6 @@ public class SuperData implements Idata{
 			do {
 				try {
 					html = spider.spider(url);
-					SystemUtil.write("/home/public/Desktop/test.txt", html);
 				}catch(Exception e){
 					error.add(url);
 					continue;
@@ -180,7 +178,8 @@ public class SuperData implements Idata{
 				
 				for(Element e:elist){
 					if (!selector.getPbase().equals("#"))
-						line = selector.getPbase()+e.attr("href");
+						//可以获取id 形成链接
+						line = selector.getPbase()+getId(e.attr("href"));
 					else 
 						line = e.attr("href");
 					SystemUtil.appendFile(selector.getSavepath()+uname, line,newfile);
@@ -191,6 +190,10 @@ public class SuperData implements Idata{
 				}
 			}while ((url = getNextLink(html,selector.getNbase().equals("#")?"":selector.getNbase(),selector.getNext())) != null);
 		}
+	}
+	
+	protected String getId(String url){
+		return "";
 	}
 	
 	protected final boolean isTypes(){
@@ -205,7 +208,7 @@ public class SuperData implements Idata{
 		for(Element e:elist){
 			temp = e.text();
 			temp = temp.replaceAll("[(\\d)]", "");
-			if(temp.indexOf(">") != -1 || temp.indexOf("<") != -1) continue;
+			if(temp.indexOf(">") != -1 || temp.indexOf("<") != -1 || temp.equals("")) continue;
 			bs.append(temp+"က");
 		}
 		return bs.toString();

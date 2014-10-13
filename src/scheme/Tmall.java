@@ -14,62 +14,65 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.mm.data.SuperData;
+import com.mm.data.struct.Type;
 import com.mm.util.SystemUtil;
 
 public class Tmall extends SuperData{
 
-	//获取所有分类后的链接
-//	protected void first0() {
-//		process = FIRST;
-//		List<String> urls = selector.getRootpath();
-//		List<String> result = new ArrayList<String>();
-//		if(urls.size() == 0) return ;
+
+//	protected void pro0(int rate) throws IOException {
+//		process = PRODUCT;
+//		//查看是否需要加入type文件
+//		boolean isType = isTypes();
+//		String typeq=isType?selector.getClassify():"";
+//		String typetemp = "";
+//		
 //		String url = null;
-//		for(int i=0;i<urls.size();i++) {
+//		List<String> urls = SystemUtil.readLine(selector.getSavepath()+fname);
+//		if (rate > urls.size()) return;
+//		String line = "";
+//		boolean newfile = rate==0;
+//		for(int i=rate;i<urls.size();i++){
+//			url = urls.get(i);
 //			breakpoint.setTotla(urls.size());
 //			breakpoint.recover(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()).toString(), 
 //					name, process, String.valueOf(i));
-//			url = urls.get(i);
-//			String brandHtml = spider.spider(url);
-//			if (brandHtml == "" || brandHtml == null) {
-//				error.add(url);
-//				continue;
-//			}
-//			Document brandDoc = Jsoup.parse(brandHtml);
-//			Elements moreElements = brandDoc
-//					.select(".brandAttr div .attrValues .av-options a");
-//			if (moreElements != null) {
-//				String jsonUrl = moreElements.get(1).attr("data-url");
-//				String jsonString = spider.spider(jsonUrl);
-//				if (jsonString == null) {
+//			do {
+//				try {
+//					html = spider.spider(url);
+//				}catch(Exception e){
+//					error.add(url);
 //					continue;
 //				}
-//				try {
-//					JSONArray jsonArray = new JSONArray(jsonString);
-//	
-//					// 得到指定的key对象的value
-//					for (int k = 0; k < jsonArray.length(); k++) {
-//						JSONObject jsonObject = (JSONObject) jsonArray.get(k);
-//						String urltemp = jsonObject.getString("href");
-//						result.add(urltemp);
-//					}
-//				} catch(Exception e){
+//				if (null == html) {
+//					error.add(url);
+//					continue;
 //				}
-//			}
+//				doc = Jsoup.parse(html);
+//				elist = doc.select(selector.getProducts());
+//
+//				if(isType){
+//					typetemp = getType(doc, isType);
+//				}
+//				
+//				for(Element e:elist){
+//					if (!selector.getPbase().equals("#"))
+//						line = selector.getPbase()+getId(e.attr("href"));
+//					else 
+//						line = e.attr("href");
+//					SystemUtil.appendFile(selector.getSavepath()+uname, line,newfile);
+//					if (isType) {
+//						SystemUtil.appendFile(selector.getSavepath()+tname,new Type(typetemp,line).toString(),newfile);
+//					}
+//					newfile = false;
+//				}
+//			}while ((url = getNextLink(html,selector.getNbase().equals("#")?"":selector.getNbase(),selector.getNext())) != null);
 //		}
-//		SystemUtil.writeColl(result, selector.getSavepath()+fname);
 //	}
 	
-//	protected String getType(Document doc, boolean isType) {
-//		if(!isType) return "";
-//		StringBuffer sb = new StringBuffer();
-//		elist = doc.select(selector.getClassify());
-//		for(Element e:elist){
-//			sb.append(e.attr("title")+"က");
-//		}
-//		elist = doc.select(selector.getBrand());
-//		if(null != elist && elist.size() > 0)
-//			sb.append(elist.get(0).text()+"က");
-//		return sb.toString();
-//	}
+	protected final String getId(String url){
+		String temp = url.substring(url.indexOf("id=")+3);
+		temp = temp.substring(0,url.indexOf("&"));
+		return temp;
+	}
 }

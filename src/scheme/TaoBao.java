@@ -94,7 +94,7 @@ public class TaoBao extends SuperData{
 		return result;
 	}
 	
-	private String getId(String url){
+	protected final String getId(String url){
 		String result = url;
 		try {
 			result = result.substring(result.indexOf("cat=")+4);
