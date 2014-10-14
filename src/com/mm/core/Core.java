@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import com.mm.logger.Log;
 import com.mm.stop.BreakPoint;
 import com.mm.util.ReadSelector;
 import com.mm.util.SYS;
+import com.mm.util.SystemUtil;
 
 /**
  * 任务调用的核心方法
@@ -49,24 +51,42 @@ public final class Core {
 	
 	public final static boolean removeThread(String id){
 		Iterator<Thread> it = allthread.iterator();
-		while(it.hasNext()) {
-			Thread temp = it.next();
-			if (temp.isAlive()){
-				//stop code
-			}
-			allthread.remove(Integer.parseInt(id));
-			return true;
+		//删除allthrea中的task
+		if(getThread(id)!=null){
+			SystemUtil.iteratorDelete(allthread, id, new Comparator() {
+				public int compare(Object o1, Object o2) {
+					if(o1 == o2) return 1;
+					if(o1 instanceof Thread && o2 instanceof String){
+						return ((Thread)o1).getName().equals(o2)?1:0;
+					}
+					return 0;
+				}
+			});
 		}
-		return false;
+		//删除task
+		if(getTask(id) != null){
+			SystemUtil.iteratorDelete(task, id, new Comparator() {
+				public int compare(Object o1, Object o2) {
+					if(o1 == o2) return 1;
+					if(o1 instanceof Task && o2 instanceof String){
+						return ((Task)o1).getId().equals(o2)?1:0;
+					}
+					return 0;
+				}
+			});
+		}
+		return true;
 	}
 	
 	public final static boolean stopThread(String id){
-		Thread temp = getThread(id);
-		if (null == temp) return false;
 		Task task = getTask(id);
 		if (null == task) return false;
-		task.stop("Core stopped");
-		
+		Thread temp = getThread(id);
+		//说明线程列表中没有此id的进程
+		if (null == temp) return true;
+		if(temp.isAlive()) {
+			task.stop("Core stopped");
+		}
 		return true;
 	}
 	

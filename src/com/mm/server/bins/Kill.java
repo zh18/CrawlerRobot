@@ -23,11 +23,7 @@ public class Kill implements Bin {
 		if(name.trim().equals("")) {
 			os.println("There doesn't have a task number");
 		}
-		if(Core.stopThread(name) && Core.removeThread(name)) {
-			os.println("delete success");
-		}
-		else
+		if(!Core.stopThread(name) || !Core.removeThread(name))
 			os.println("delete error");
 	}
-
 }
