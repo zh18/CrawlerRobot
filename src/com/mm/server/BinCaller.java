@@ -27,6 +27,10 @@ public class BinCaller implements Runnable{
 		allBins.add(bin);
 	}
 	
+	public static void clearBins(){
+		allBins.clear();
+	}
+	
 	public void call(InputStream is,PrintStream os,String cmd){
 		String temp = cmd.split(" ")[0];
 		for(Bin b:allBins){

@@ -49,7 +49,7 @@ public final class Core {
 	
 	public final static boolean removeThread(String id){
 		Iterator<Thread> it = allthread.iterator();
-		while(it.hasNext()){
+		while(it.hasNext()) {
 			Thread temp = it.next();
 			if (temp.isAlive()){
 				temp.stop();
