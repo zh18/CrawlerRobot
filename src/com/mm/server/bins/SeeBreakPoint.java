@@ -13,11 +13,19 @@ public class SeeBreakPoint implements Bin {
 	}
 	
 	public void run(InputStream is, PrintStream os, String cmd) {
-		String name = cmd.substring(cmd.lastIndexOf(" "),cmd.length()).trim();
-		if(cmd.equals("")) {
-			for(String s:Protection.seeAllBreakPoint())	os.println(s);
+		String name = null;
+		try {
+			name = cmd.substring(cmd.lastIndexOf("sbp")+3,cmd.length()).trim();
+		}catch(Exception e){
+			return ;
+		}
+		if(name.trim().equals("")) {
+			os.println("    BREAK POINT NAMES    ");
+			os.println("-------------------------");
+			os.println(Protection.seeAllBreakPoint());
 		}
 		else {
+			os.println();
 			os.println(Protection.read(name));
 		}
 	}

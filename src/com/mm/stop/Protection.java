@@ -40,7 +40,7 @@ public class Protection {
 	}
 	
 	public static BreakPoint read(String name){
-		return protection.read(name);
+		return ProtectionDao.readBreak(name);
 	}
 	
 	public static void save(BreakPoint breakpoint){
@@ -65,12 +65,12 @@ public class Protection {
 		}
 	}
 	
-	public static List<String> seeAllBreakPoint(){
-		List<String> result = new ArrayList<String>();
+	public static String seeAllBreakPoint(){
+		StringBuffer sb = new StringBuffer();
 		for(BreakPoint bp:ProtectionDao.seeAll()){
-			result.add(bp.toString());
+			sb.append(bp.getWname()+"  ");
 		}
-		return result;
+		return sb.toString();
 	}
 	
 	public static BreakPoint recover(String name){

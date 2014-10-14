@@ -18,6 +18,7 @@ import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -109,7 +110,6 @@ public class SystemUtil {
 	 */
 	public static void loadClass(String path,String url,String packagename) {
 		ClassLoader cl = null;
-		int i = 0;
 		try {
 			File files[] = new File(path).listFiles();
 			URL [] urls= new URL[]{new URL("file:"+url)};
@@ -270,4 +270,33 @@ public class SystemUtil {
 		return prop.getProperty(key);
 	}
 	
+	public static boolean  iteratorDelete(Object o,Object target,Comparator comp) {
+		boolean result = false;
+		if(!(o instanceof Iterable)) return result;
+		Iterable col = (Iterable)o;
+		Iterator it = col.iterator();
+		while(it.hasNext()){
+			Object otemp = it.next();
+			if(comp.compare(otemp, target) == 1){
+				it.remove();
+				result = true;
+			}
+		}
+		return result;
+	}
+	
+	public static boolean  iteratorDelete(Object o,Object target) {
+		boolean result = false;
+		if(!(o instanceof Iterable)) return result;
+		Iterable col = (Iterable)o;
+		Iterator it = col.iterator();
+		while(it.hasNext()){
+			Object otemp = it.next();
+			if(otemp.equals(target)){
+				it.remove();
+				result = true;
+			}
+		}
+		return result;
+	}
 }

@@ -69,11 +69,11 @@ public class BreakPoint {
 	
 	
 	public String toString(){
-		return "breakreason="+breakreason+"\n"+
-			   "time="+time+"\n"+
-			   "wname="+wname+"\n"+
-			   "pname="+pname+"\n"+
-			   "rate="+rate+"\n";
+		return String.format("%12s","breakreason")+" = "+breakreason+"\n"+
+			   String.format("%12s","time")+" = "+time+"\n"+
+			   String.format("%12s","scheme name")+" = "+wname+"\n"+
+			   String.format("%12s","proces name")+" = "+pname+"\n"+
+			   String.format("%12s","rate")+" = "+rate+"\n";
 	}
 
 	public String getDone(){

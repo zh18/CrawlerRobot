@@ -17,8 +17,12 @@ public class SeeFiles implements Bin {
 	}
 
 	public void run(InputStream is, PrintStream os, String cmd) {
-		String name = cmd.substring(cmd.lastIndexOf(" "), cmd.length()).trim();
-		if(name.equals("")) os.println("Please input a scheme name. we have to many files");
+		String name = cmd.substring(cmd.indexOf("sf")+2).trim();
+		if(name.equals("")) {
+			StringBuffer sb = new StringBuffer();
+			for(String s:ReadSelector.getAllNames()) sb.append(s+"  ");
+			os.println(sb.toString());
+		}
 		else {
 			Selector s = ReadSelector.getSelector(name);
 			String savepath = s.getSavepath();

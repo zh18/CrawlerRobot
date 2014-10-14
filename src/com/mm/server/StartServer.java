@@ -38,7 +38,7 @@ public class StartServer {
 	
 	public static void loadScheme(){
 		String file = DataBase.getString("syspath");
-		SystemUtil.loadClass(file, SYS.SYS_DG_SCHEME_FLODER, SYS.SYS_DG_SCHEME);
+		SystemUtil.loadClass(file+SYS.SYS_DG_SCHEME_FLODER, file, SYS.SYS_DG_SCHEME);
 		// we havn't use this yet
 //		SystemUtil.loadClass(file, SYS.SYS_IF_SCHEME_FLODER, SYS.SYS_IF_SCHEME);
 	}
@@ -46,7 +46,7 @@ public class StartServer {
 	public static void registerBins(){
 		String file = DataBase.getString("syspath");
 		File files[] = new File(file+SYS.SYS_BIN_FLODER).listFiles();
-		SystemUtil.loadClass(file+SYS.SYS_BIN_FLODER, file, SYS.SYS_BIN);
+		SystemUtil.loadClass(file+SYS.SYS_BIN_FLODER,file, SYS.SYS_BIN);
 		BinCaller.clearBins();
 		for(File f:files){
 			try {

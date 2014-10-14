@@ -32,6 +32,17 @@ public class BinCaller implements Runnable{
 			allBins.clear();
 	}
 	
+	/**
+	 * 复写equals方法 与进来的字符串做比对
+	 */
+	public boolean equals(Object s){
+		if(s == this) return true;
+		if(s instanceof String) {
+			return cmd.equals(s);
+		}
+		return false;
+	}
+	
 	public void call(InputStream is,PrintStream os,String cmd){
 		String temp = cmd.split(" ")[0];
 		for(Bin b:allBins){
@@ -41,6 +52,10 @@ public class BinCaller implements Runnable{
 			}
 		}
 		
+	}
+	
+	public String getCMD(){
+		return cmd;
 	}
 	
 	public static List<Bin> getAllBins(){

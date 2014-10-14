@@ -66,7 +66,7 @@ public final class Core {
 		Task task = getTask(id);
 		if (null == task) return false;
 		task.stop("Core stopped");
-		temp.stop();
+		
 		return true;
 	}
 	
