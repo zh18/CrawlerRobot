@@ -216,6 +216,8 @@ public abstract class FBase implements FormatterBase {
 		}
 	}
 	
+	
+	
 	public void setFactory(SpiderFactory factory){
 		this.factory = factory;
 		spider = factory.getSpider();
@@ -223,6 +225,10 @@ public abstract class FBase implements FormatterBase {
 	
 	public void setSelector(Selector selector){
 		this.selector = selector;
+	}
+	
+	public Selector getSelector(){
+		return selector;
 	}
 	
 	public void setName(String name){

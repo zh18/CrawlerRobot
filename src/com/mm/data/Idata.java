@@ -1,6 +1,7 @@
 package com.mm.data;
 
 import com.mm.data.struct.Selector;
+import com.mm.db.DataBase;
 import com.mm.spider.SpiderFactory;
 import com.mm.stop.BreakPoint;
 
@@ -13,7 +14,14 @@ public interface Idata {
 				  BRAND = "brand",
 				  INFO = "info",
 				  DONE = "done";
-					
+	
+	public final static String fname = DataBase.getString("fname"),
+			  uname = DataBase.getString("uname"),
+			  hfname = DataBase.getString("hname"),
+			  tname = DataBase.getString("tname"),
+			  iname = DataBase.getString("iname"),
+			  mark = "ကကက";
+	
 	
 	public BreakPoint getBreakPoint();
 	
@@ -24,6 +32,8 @@ public interface Idata {
 	public void setFactory(SpiderFactory factory);
 	
 	public void setSelector(Selector selector);
+	
+	public Selector getSelector();
 	
 	public void setName(String name);
 

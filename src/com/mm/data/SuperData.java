@@ -41,12 +41,6 @@ public class SuperData implements Idata{
 	protected Set<String> error;
 	protected int rate;
 	
-	protected final static String fname = DataBase.getString("fname"),
-								  uname = DataBase.getString("uname"),
-								  hfname = DataBase.getString("hname"),
-								  tname = DataBase.getString("tname"),
-								  mark = "ကကက";
-	
 	
 	public SuperData(){
 		name = this.getClass().getName();
@@ -287,7 +281,9 @@ public class SuperData implements Idata{
 	}
 	
 	
-	
+	public Selector getSelector(){
+		return selector;
+	}
 	//----------------------------------check uname fname 是否存在
 	private boolean check(String part){
 		if(part.equals(PRODUCT))
