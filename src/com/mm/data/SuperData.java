@@ -145,7 +145,6 @@ public class SuperData implements Idata{
 		process = PRODUCT;
 		//查看是否需要加入type文件
 		boolean isType = isTypes();
-		String typeq=isType?selector.getClassify():"";
 		String typetemp = "";
 		
 		String url = null;
@@ -207,6 +206,7 @@ public class SuperData implements Idata{
 		String temp = null;
 		for(Element e:elist){
 			temp = e.text();
+			//这个地方应该搞成替换队列
 			temp = temp.replaceAll("[(\\d)]", "");
 			if(temp.indexOf(">") != -1 || temp.indexOf("<") != -1 || temp.equals("")) continue;
 			bs.append(temp+"က");

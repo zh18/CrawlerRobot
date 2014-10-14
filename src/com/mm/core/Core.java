@@ -52,7 +52,7 @@ public final class Core {
 		while(it.hasNext()) {
 			Thread temp = it.next();
 			if (temp.isAlive()){
-				temp.stop();
+				//stop code
 			}
 			allthread.remove(Integer.parseInt(id));
 			return true;
@@ -72,9 +72,6 @@ public final class Core {
 	
 	private static void initTask(){
 		task = new ArrayList<Task>();
-//		for(String s:Task.getSchemeName()){
-//			task.add(new Task(s, false));
-//		}
 	}
 	
 	public static Task getTask(String id){
