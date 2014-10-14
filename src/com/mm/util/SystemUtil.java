@@ -92,8 +92,9 @@ public class SystemUtil {
 	}
 	
 	public static void appendFile(String path,File dpath) throws IOException {
-		RandomAccessFile raf = new RandomAccessFile(path,"rw");
-		BufferedReader br = new BufferedReader(new FileReader(dpath));
+		RandomAccessFile raf = new RandomAccessFile(dpath,"rw");
+		raf.seek(raf.length());
+		BufferedReader br = new BufferedReader(new FileReader(path));
 		String line="";
 		while((line = br.readLine()) != null){
 			raf.write((line+"\n").getBytes());
@@ -212,29 +213,38 @@ public class SystemUtil {
 		if(!(new File(src).isDirectory() && new File(dest).isDirectory())) return false; 
 		srcf = new File(src).listFiles();
 		destf = new File(dest).listFiles();
-		boolean flag = false;
 		for(int i=0;i<srcf.length;i++){
-			String name = srcf[i].getName();
-			for(int j=0;j<destf.length;j++){
-				if(name.equals(destf[j]))
-					flag=true;
-			}
-			if(!flag) return false;
+			// 如果是文件的话
 			if(srcf[i].isFile()){
+				boolean copyflag = false;
 				for(int j=0;j<destf.length;j++){
+					//有文件，合并
 					if(srcf[i].getName().equals(destf[j].getName())){
+						copyflag = true;
 						appendFile(srcf[i].getAbsolutePath(), destf[j]);
 					}
 				}
+				// 没文件，则复制文件
+				if(!copyflag){
+					copyFile(srcf[i], dest);
+				}
 			}
+			// 如果是文件夹
 			else if(srcf[i].isDirectory()){
+				boolean copyflag = false;
 				for(int j=0;j<destf.length;j++){
+					//如果在目标文件夹中找到同名文件夹，则合并
 					if(srcf[i].getName().equals(destf[j].getName())){
-						File [] srcftemp = srcf[i].listFiles();
-						for(File temp:srcftemp){
-							copyFile(temp,destf[j].getAbsolutePath());
-						}
+						copyflag = true;
+						//递归调用
+						merge(srcf[i].getAbsolutePath(), destf[j].getAbsolutePath());
 					}
+				}
+				//如果没有，则新建文件夹，并复制文件
+				if(!copyflag) {
+					File desnewfolder = new File(new File(dest).getParent()+srcf[i].getName());
+					desnewfolder.mkdir();
+					merge(srcf[i].getAbsolutePath(),desnewfolder.getAbsolutePath());
 				}
 			}
 		}

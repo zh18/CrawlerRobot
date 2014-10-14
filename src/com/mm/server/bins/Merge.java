@@ -19,6 +19,7 @@ public class Merge implements Bin {
 		try {
 			temp = temp.substring(temp.indexOf("mg")+2).trim();
 			String lines[] = temp.split(" ");
+			if(lines.length==0 || lines.length==1) return;
 			//src //dest
 			SystemUtil.merge(lines[0], lines[1]);
 		}catch(Exception e){
