@@ -23,6 +23,7 @@ public final class Core {
 	
 	public static void start(String id){
 		Task temp = getTask(id);
+		if(null == temp) return;
 		Thread tmth = new Thread(temp);
 		tmth.setName(temp.getId());
 		allthread.add(tmth);
@@ -45,7 +46,7 @@ public final class Core {
 			if (temp.isAlive()){
 				temp.stop();
 			}
-			it.remove();
+			allthread.remove(Integer.parseInt(id));
 			return true;
 		}
 		return false;
@@ -68,7 +69,7 @@ public final class Core {
 //		}
 	}
 	
-	private static Task getTask(String id){
+	public static Task getTask(String id){
 		for(Task t:task){
 			if (t.getId().equals(id.trim())){
 				return t;

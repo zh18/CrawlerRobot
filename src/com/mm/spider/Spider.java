@@ -48,7 +48,17 @@ public class Spider implements ISpider{
 	}
 	
 	public String spider(String url){
-		return spider(null,url);
+		String content =  spider(null,url);
+		int times = 3;
+		try {
+			while(times>0){
+				content = spider(null,url);
+				if(content != null) return content;
+				times --; 
+			}
+		}catch(Exception e){
+		}
+		return null;
 	}
 	
 	public String spider(String url,int retries){

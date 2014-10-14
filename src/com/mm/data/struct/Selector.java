@@ -67,9 +67,12 @@ public class Selector {
 		this.name = name;
 		this.rootpath = new ArrayList<String>();
 		for(String s:rootpath){
-			this.rootpath.add(s);
+			this.rootpath.add(s.trim());
 		}
-		this.fselects = fselects;
+		this.fselects = new String[fselects.length];
+		for(int i=0;i<fselects.length;i++){
+			this.fselects[i] = fselects[i].trim();
+		}
 		this.products = products;
 		this.next = next;
 		this.savepath = savepath;

@@ -160,8 +160,10 @@ public class TaoBao extends SuperData{
 					s = s.substring(s.indexOf("value")+7);
 					s = s.substring(s.indexOf("\"")+1);
 					s = s.substring(0, s.lastIndexOf("\""));
-					if(s.indexOf(":")==-1 && s.indexOf("\"") == -1 && !s.trim().equals(""))
+					if(s.indexOf(":")==-1 && s.indexOf("\"") == -1 && !s.trim().equals("")) {
 						result.add(base+"?json=on&cat="+s+"&style=grid&pSize=95");
+						System.out.println(result.size());
+					}
 				}
 			}
 		}catch(Exception e){
@@ -189,6 +191,7 @@ public class TaoBao extends SuperData{
 			result.addAll(getF(url, html));
 		}
 		if(times==0) return result;
-		return rotine(result,times);
+		result.addAll(rotine(result,times));
+		return result;
 	}
 }
