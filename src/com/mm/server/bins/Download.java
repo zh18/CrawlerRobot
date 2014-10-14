@@ -3,6 +3,9 @@ package com.mm.server.bins;
 import java.io.InputStream;
 import java.io.PrintStream;
 
+import com.mm.core.Core;
+import com.mm.core.Task;
+import com.mm.data.Idata;
 import com.mm.server.Bin;
 
 /**
@@ -20,9 +23,27 @@ public class Download implements Bin {
 		return "download : series cmd of data getter one step - download html pages";
 	}
 
+	/**
+	 * 每一个step of 3 都应该式一个独立的任务，独立的名字，独立的再数据库中
+	 * 
+	 * 格式： download -n scheme_name -r rate
+	 */
 	public void run(InputStream is, PrintStream os, String cmd) {
-		// TODO Auto-generated method stub
-
+		//scheme name
+		String name = null;
+		String rate = null;
+		try {
+			name = cmd.substring(cmd.indexOf("-n")+2, cmd.indexOf("-r")).trim();
+			rate = cmd.substring(cmd.indexOf("-r")+2).trim();
+		}catch(Exception e){
+			name = cmd.substring(cmd.indexOf("-n")).trim();
+		}
+		if(!Task.fileCheck(name, Idata.DOWNLOAD)) {
+			os.print("There is no have url files , please use first or tk -n scheme first");
+			return;
+		}
+		if(null == rate) rate = "0";
+		Core.add(name,Idata.DOWNLOAD,rate);
 	}
 
 }

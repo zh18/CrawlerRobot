@@ -9,19 +9,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mm.data.Idata;
+import com.mm.data.struct.Selector;
 import com.mm.db.DataBase;
 import com.mm.logger.Log;
 import com.mm.spider.SpiderFactory;
 import com.mm.spider.SpiderFactoryImpl;
+import com.mm.stop.BreakPoint;
 import com.mm.stop.Protection;
 import com.mm.util.ReadSelector;
 import com.mm.util.SYS;
+import com.mm.util.SystemUtil;
 
 public final class Task implements Runnable {
 	
 	public final static String START = "never_run",
 							   STOP = "stop",
 							   RUNNING = "running";
+	
+	protected final static String fname = DataBase.getString("fname"),
+			  uname = DataBase.getString("uname"),
+			  hfname = DataBase.getString("hname"),
+			  tname = DataBase.getString("tname"),
+			  iname = DataBase.getString("iname"),
+			  mark = "ကကက";
+	
 	
 	private String id;
 	private static int TASK_ID = 0;
@@ -34,6 +45,8 @@ public final class Task implements Runnable {
 	private String running;
 	
 	/**
+	 * 
+	 * 直接读取数据库中的断点。
 	 * 
 	 * @param name DD_ghhz
 	 * @param bp
@@ -67,6 +80,39 @@ public final class Task implements Runnable {
 		running = START;
 	}
 	
+	/**
+	 * 重载的构造方法，对于人工建立的步骤其作用
+	 * @param name scheme_name
+	 * @param breakpoint 断点
+	 */
+	public Task(String name,BreakPoint breakpoint){
+		// 设置id
+				id = String.valueOf(TASK_ID++);
+				// 设置名字
+				this.name = name;
+				// 设置爬虫工厂
+				factory = new SpiderFactoryImpl();
+				// 实例化data
+				Class clazz = null;
+				try {
+					clazz = Class.forName(SYS.SYS_DG_SCHEME+"."+name.split("_")[0].trim());
+					data = (Idata)clazz.newInstance();
+					// 设置名字
+					data.setName(name);
+				} catch(ClassNotFoundException e){
+					Log.logger.error("Data class not found error",e);
+				} catch (Exception e) {
+					Log.logger.error("Task init error",e);
+				} 
+				// 设置断点信息
+				data.setBreakPoint(breakpoint);
+				// 设置蜘蛛   data下载时候的data由task设置
+				data.setFactory(factory);
+				// 设置选择器 selector
+				data.setSelector(ReadSelector.getSelector(name));
+				// 设置初始状态
+				running = START;
+	}
 	
 	public void run(){
 		try {
@@ -119,6 +165,14 @@ public final class Task implements Runnable {
 		return result;
 	}
 	
+	public static boolean fileCheck(String name,String process){
+		Selector s = ReadSelector.getSelector(name);
+		if(process.equals(Idata.FIRST)) return true;
+		else if (process.equals(Idata.PRODUCT)) return SystemUtil.filecheck(s.getSavepath()+fname);
+		else if (process.equals(Idata.DOWNLOAD)) return SystemUtil.filecheck(s.getSavepath()+uname);
+		else if (process.equals(Idata.INFO)) return SystemUtil.filecheck(s.getSavepath()+hfname+File.separator+"0~10000");
+		else return false;
+	}
 	
 	public void setSpiderFactory(SpiderFactory factory){
 		this.factory = factory;

@@ -13,6 +13,11 @@ public class BreakPoint {
 	public BreakPoint(){
 	}
 	
+	public BreakPoint(String wname,String pname,String rate){
+		this.wname = wname;
+		this.pname = pname;
+		this.rate = rate;
+	}
 	
 	public BreakPoint(String breakreason, String time, String wname,
 			String pname, String rate) {

@@ -19,9 +19,9 @@ public class ReadSelector {
 		String sname = name.substring(0, name.indexOf("_"));
 		String subname = null;
 		try {
-			subname = name.substring(name.indexOf("_")+1);
+			subname = name.substring(name.indexOf("_")+1,name.indexOf("."));
 		}catch(Exception e){
-			//default
+			subname = name.substring(name.indexOf("_")+1);
 		}
 		List<String> properties =  SystemUtil.getAllKeys(SYS.PATH+SYS.SYS_DG_SCHEME_FLODER+sname+".properties");
 		String num = findKey(subname,properties);

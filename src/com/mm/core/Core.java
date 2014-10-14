@@ -8,9 +8,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.mm.logger.Log;
+import com.mm.stop.BreakPoint;
 import com.mm.util.ReadSelector;
 import com.mm.util.SYS;
 
+/**
+ * 任务调用的核心方法
+ * 
+ * @author zh
+ * @version 0.1
+ * @since Oct 14,2014
+ */
 public final class Core {
 
 	private static List<Task> task=null;
@@ -130,5 +138,10 @@ public final class Core {
 	
 	public final static void add(String name,boolean bp){
 		task.add(new Task(name,bp));
+	}
+	
+	public final static void add(String name,String pname,String rate){
+		String iname = name+"."+pname;
+		task.add(new Task(iname,new BreakPoint(iname,pname,rate)));
 	}
 }

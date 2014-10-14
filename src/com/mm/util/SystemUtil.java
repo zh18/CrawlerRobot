@@ -260,6 +260,9 @@ public class SystemUtil {
 		bw.close();
 	}
 	
+	public static boolean filecheck(String path) {
+		return new File(path).exists();
+	}
 	
 	public static String readProperties(String path,String key) throws IOException {
 		Properties prop = new Properties();

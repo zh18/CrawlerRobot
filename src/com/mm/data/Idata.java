@@ -11,6 +11,7 @@ public interface Idata {
 				  PRODUCT = "product",
 				  CLASS = "classify",
 				  BRAND = "brand",
+				  INFO = "info",
 				  DONE = "done";
 					
 	
