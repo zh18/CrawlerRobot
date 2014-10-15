@@ -21,7 +21,7 @@ public class MulData implements Idata {
 	protected SpiderFactory factory = new SpiderFactoryImpl();
 	protected Stack<String> prostack = null;
 	protected String name;
-	private int pthreadn=5;
+	private int pthreadn=2;
 	
 	protected BreakPoint breakpoint = null;
 	protected Set<String> proset = null;
@@ -30,19 +30,18 @@ public class MulData implements Idata {
 	protected Doable<String> downdo = null;
 	protected Doable<String> prodo = null;
 	protected Doable<String> firstdo = null;
+
+	Hen<String> pro,first;
 	
-	
-	
-	Hen<String> pro = new Hen<String>(),first=new Hen<String>();
-	
-	public MulData(String name,boolean bp){
+	public MulData(String name,boolean bp) {
 		this.name = name;
 		error = new HashSet<String>();
 		proset = new HashSet<String>();
 		htmset = new HashSet<String>();
 		selector = ReadSelector.getSelector(name);
 		prostack = new Stack<String>();
-		
+		pro = new Hen<String>(prostack);
+		first = new Hen<String>(prostack);
 		prodo = new ProductDoImpl(selector, error,htmset,null,factory);
 		for(int i=0;i<pthreadn;i++){
 			pro.addChicken(new MulImpl(prostack, prodo));

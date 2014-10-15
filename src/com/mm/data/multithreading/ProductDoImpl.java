@@ -46,9 +46,9 @@ public class ProductDoImpl implements Doable<String> {
 		// 查看是否需要加入type文件
 		boolean isType = isTypes();
 		String typetemp = "";
-		System.out.println("producting");
 		do {
 			html = spider.spider(s);
+			if(html != null) 		System.out.println("producting");
 			if (null == html) {
 				error.add(url);
 				continue;
@@ -75,9 +75,6 @@ public class ProductDoImpl implements Doable<String> {
 			}
 		} while ((url = getNextLink(html, selector.getNbase().equals("#") ? ""
 				: selector.getNbase(), selector.getNext())) != null);
-		if(null != hen)
-			hen.shoot();  //告诉下面的进程，我结束了
-		throw new MulGoOutException("product");  //抛异常，break出去异常
 	}
 
 	protected String getId(String url) {

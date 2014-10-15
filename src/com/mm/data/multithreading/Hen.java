@@ -7,9 +7,11 @@ import java.util.Stack;
 public class Hen<T> {
 
 	private List<IMul<T>> chickens = null;
+	private Stack<T> stack = null;
 	
-	public Hen(){
+	public Hen(Stack<T> stack){
 		chickens = new ArrayList<IMul<T>>();
+		this.stack = stack;
 	}
 	
 	public void addChicken(IMul<T> imul){
@@ -23,9 +25,10 @@ public class Hen<T> {
 	}
 	
 	public void push(T ... t){
-		for(IMul<T> i:chickens){
-			i.push(t);
+		for(T temp:t){
+			stack.add(temp);
 		}
+		eat(stack);
 	}
 	
 	public void shoot() {

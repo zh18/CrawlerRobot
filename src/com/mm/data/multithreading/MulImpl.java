@@ -2,16 +2,17 @@ package com.mm.data.multithreading;
 
 import java.util.Stack;
 
+import org.apache.log4j.net.SyslogAppender;
+
 import com.mm.exception.MulGoOutException;
 
 public class MulImpl implements IMul<String>{
 	
 	protected Doable<String> doable = null;
 	protected Stack<String> stack = null;
-	protected boolean upend; 
+	protected boolean upend = false; 
 	protected String url;
 	protected static boolean end = false;
-	private Object lock = new Object();
 	
 	public MulImpl(Stack<String> stack,Doable<String> doable) {
 		this.stack = stack;
@@ -30,11 +31,10 @@ public class MulImpl implements IMul<String>{
 	}
 
 	public String pop() {
-		System.out.println("will poping");
 		synchronized (doable) {
 			if(stack.isEmpty()) return null;
 			String temp = stack.pop();
-			System.out.println("poped : "+temp);
+			System.out.println("poped : "+stack.size() + temp);
 			return temp;
 		}
 	}
@@ -48,27 +48,20 @@ public class MulImpl implements IMul<String>{
 	
 	public void run(){
 		while(true){
-			//如果stack为空，说明这个东西，不许要上一层的数据。
-			if(stack != null) {
-				if(stack.isEmpty() && (upend || end)) break;
-				if(stack.isEmpty() || (url = this.pop()) == null) {
+			try {
+				if(null == stack) doable.x(null);
+				if(stack.isEmpty() && !upend) {
 					synchronized (this) {
-						try {
-							System.out.println("stack size"+stack.size()+" wait");
-							wait();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+						System.out.println("waiting : "+stack.size());
+						wait();
 					}
 				}
-			}
-			try {
-				// when we got an exception we exit
-				doable.x(url);
+				if (stack.isEmpty() && upend) break;
+				if(!stack.isEmpty()) {
+					url = pop();
+					doable.x(url);
+				}
 			}catch(MulGoOutException mgoe){
-				break;
-			}catch(RuntimeException re){
-				re.printStackTrace();
 				break;
 			}catch(Exception e){
 				e.printStackTrace();
@@ -80,7 +73,6 @@ public class MulImpl implements IMul<String>{
 		synchronized (doable) {
 			for(String temp:s){
 				this.stack.push(temp);
-				System.out.println("we add "+s+" and will be notify");
 			}
 		}
 		synchronized (this) {
