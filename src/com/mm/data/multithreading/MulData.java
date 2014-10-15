@@ -18,27 +18,22 @@ public class MulData implements Idata {
 
 	protected Set<String> error = null;
 	protected Selector selector = null;
-	protected String process,name,rate;
-	protected SpiderFactory factory;
-	protected BreakPoint breakpoint;
-	protected BufferedReader br = null;
-	protected BufferedWriter bw = null;
-	
-	protected IMul<String> first = null;
-	protected IMul<String> pro = null;
-	protected IMul<String> down = null;
-	
+	protected SpiderFactory factory = new SpiderFactoryImpl();
 	protected Stack<String> prostack = null;
-	protected Stack<String> htmlstack = null;
+	protected String name;
+	private int pthreadn=5;
 	
-	private int pthreadn=2,dthreadn;
-	
+	protected BreakPoint breakpoint = null;
 	protected Set<String> proset = null;
 	protected Set<String> htmset = null;
 	
 	protected Doable<String> downdo = null;
 	protected Doable<String> prodo = null;
 	protected Doable<String> firstdo = null;
+	
+	
+	
+	Hen<String> pro = new Hen<String>(),first=new Hen<String>();
 	
 	public MulData(String name,boolean bp){
 		this.name = name;
@@ -47,16 +42,13 @@ public class MulData implements Idata {
 		htmset = new HashSet<String>();
 		selector = ReadSelector.getSelector(name);
 		prostack = new Stack<String>();
-		htmlstack = new Stack<String>();
-		this.factory = new SpiderFactoryImpl();
-		try {
-			br = new BufferedReader(new FileReader(selector.getSavepath()+uname));
-		} catch(Exception e){
-			
+		
+		prodo = new ProductDoImpl(selector, error,htmset,null,factory);
+		for(int i=0;i<pthreadn;i++){
+			pro.addChicken(new MulImpl(prostack, prodo));
 		}
-		down = new MulImpl(htmlstack,new DownloadDoImpl(br, bw, factory, error));
-		pro = new MulImpl(prostack, new ProductDoImpl(selector, error,htmset,down,factory));
-		first = new MulImpl(null,new FirstDoImpl(selector, factory, pro));
+		firstdo = new FirstDoImpl(selector, factory, pro);
+		first.addChicken(new MulImpl(null, firstdo));
 	}
 
 	/**
@@ -65,24 +57,10 @@ public class MulData implements Idata {
 	 */
 	public MulData(String name,BreakPoint bp){
 	}
-	
-	public BreakPoint getBreakPoint() {
-		return breakpoint;
-	}
-
-	public void setBreakPoint(BreakPoint breakpoint) {
-		this.breakpoint = breakpoint;
-	}
 
 	public void data() throws Exception {
-		// wait for fisrst step
-		new Thread(first).start();
-		for(int i=0;i<pthreadn;i++){
-			new Thread(pro).start();
-		}
-//		for(int i=0;i<dthreadn;i++){
-//			new Thread(down).start();
-//		}
+		first.start();
+		pro.start();
 	}
 
 	public void setFactory(SpiderFactory factory) {
@@ -104,12 +82,13 @@ public class MulData implements Idata {
 	public static void main(String[] args) throws Exception {
 		Idata data = new MulData("T_ppd",false);
 		data.data();
-		Thread thread = new Thread(new Runnable() {
-			public void run() {
-				while(true){
-					System.out.println(Thread.currentThread().getName());
-				}
-			}
-		});
+	}
+
+	public BreakPoint getBreakPoint() {
+		return breakpoint;
+	}
+
+	public void setBreakPoint(BreakPoint breakpoint) {
+		this.breakpoint = breakpoint;
 	}
 }

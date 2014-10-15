@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 import com.mm.data.Idata;
 import com.mm.data.struct.Selector;
 import com.mm.data.struct.Type;
+import com.mm.exception.MulGoOutException;
 import com.mm.spider.ISpider;
 import com.mm.spider.SpiderFactory;
 import com.mm.util.SystemUtil;
@@ -21,7 +22,7 @@ public class ProductDoImpl implements Doable<String> {
 
 	protected ISpider spider = null;
 	protected SpiderFactory factory = null;
-	protected IMul<String> imul = null;
+	protected Hen<String> hen=null;
 	
 	protected Document doc = null;
 	protected Elements elist = null;
@@ -30,12 +31,12 @@ public class ProductDoImpl implements Doable<String> {
 	protected Set<String> checknew = null;
 	
 	
-	public ProductDoImpl(Selector selector,Set<String> error,Set<String> checknew,IMul<String> imul,SpiderFactory factory) {
+	public ProductDoImpl(Selector selector,Set<String> error,Set<String> checknew,Hen<String> hen,SpiderFactory factory) {
 		this.error = error;
 		this.selector = selector;
 		this.factory = factory;
 		this.spider = factory.getSpider();
-		this.imul = imul;
+		this.hen = hen;
 	}
 
 	public void x(String s) throws Exception{
@@ -67,8 +68,6 @@ public class ProductDoImpl implements Doable<String> {
 				SystemUtil.appendFile(selector.getSavepath() + Idata.uname,
 						line, false);
 				//有新的一行的时候，就把这个链接压入下一个动作的stack
-//				if(checknew.add(line))
-//					imul.push(line);
 				if (isType) {
 					SystemUtil.appendFile(selector.getSavepath() + Idata.tname,
 							new Type(typetemp, line).toString(), false);
@@ -76,8 +75,9 @@ public class ProductDoImpl implements Doable<String> {
 			}
 		} while ((url = getNextLink(html, selector.getNbase().equals("#") ? ""
 				: selector.getNbase(), selector.getNext())) != null);
-		imul.shoot();  //告诉下面的进程，我结束了
-		throw new RuntimeException();  //抛异常，break出去异常
+		if(null != hen)
+			hen.shoot();  //告诉下面的进程，我结束了
+		throw new MulGoOutException("product");  //抛异常，break出去异常
 	}
 
 	protected String getId(String url) {

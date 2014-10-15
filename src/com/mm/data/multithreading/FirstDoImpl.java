@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 
 import com.mm.data.Idata;
 import com.mm.data.struct.Selector;
+import com.mm.exception.MulGoOutException;
 import com.mm.spider.ISpider;
 import com.mm.spider.SpiderFactory;
 import com.mm.util.SystemUtil;
@@ -22,18 +23,18 @@ public class FirstDoImpl implements Doable<String> {
 	protected Selector selector = null;
 	protected SpiderFactory factory = null;
 	protected ISpider spider = null;
-	protected IMul<String> imul = null;
+	protected Hen<String> hen = null;
 	protected Set<String> nextSet = null;
 	
 	protected Document doc = null;
 	protected Elements elist = null;
 	protected String html,url,line;
 	
-	public FirstDoImpl(Selector selector,SpiderFactory factory,IMul<String> imul){
+	public FirstDoImpl(Selector selector,SpiderFactory factory,Hen<String> hen){
 		this.selector = selector;
 		this.factory = factory;
 		spider = factory.getSpider();
-		this.imul = imul;
+		this.hen = hen;
 	}
 	
 	public void x(String t) throws Exception {
@@ -74,10 +75,10 @@ public class FirstDoImpl implements Doable<String> {
 		}
 		String [] urls = new String[temp.get(temp.size()-1).size()];
 		urls = SystemUtil.listToArray(temp.get(temp.size()-1), urls);
-		imul.push(urls);
-		imul.shoot();
+		hen.push(urls);
+		hen.shoot();
 		SystemUtil.writeColl(temp.get(temp.size()-1), selector.getSavepath()+Idata.fname);
 		System.out.println("first done");
-		throw new RuntimeException();
+		throw new MulGoOutException("first");
 	}
 }

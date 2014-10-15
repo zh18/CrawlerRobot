@@ -2,6 +2,8 @@ package com.mm.data.multithreading;
 
 import java.util.Stack;
 
+import com.mm.exception.MulGoOutException;
+
 public class MulImpl implements IMul<String>{
 	
 	protected Doable<String> doable = null;
@@ -18,14 +20,22 @@ public class MulImpl implements IMul<String>{
 
 	
 	
-	public void setStack(Stack<String> stack) {
+	public void setStack(Stack<String> stack) throws RuntimeException {
 		this.stack = stack;
+		if(!stack.isEmpty()) {
+			synchronized (this) {
+				notify();
+			}
+		}
 	}
 
 	public String pop() {
-		synchronized (lock) {
+		System.out.println("will poping");
+		synchronized (doable) {
 			if(stack.isEmpty()) return null;
-			return stack.pop();
+			String temp = stack.pop();
+			System.out.println("poped : "+temp);
+			return temp;
 		}
 	}
 
@@ -55,6 +65,8 @@ public class MulImpl implements IMul<String>{
 			try {
 				// when we got an exception we exit
 				doable.x(url);
+			}catch(MulGoOutException mgoe){
+				break;
 			}catch(RuntimeException re){
 				re.printStackTrace();
 				break;
@@ -65,7 +77,7 @@ public class MulImpl implements IMul<String>{
 	}
 
 	public void push(String ... s){
-		synchronized (lock) {
+		synchronized (doable) {
 			for(String temp:s){
 				this.stack.push(temp);
 				System.out.println("we add "+s+" and will be notify");
