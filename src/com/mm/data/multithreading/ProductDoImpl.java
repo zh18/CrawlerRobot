@@ -53,7 +53,9 @@ public class ProductDoImpl implements Doable<String> {
 			if (isType) {
 				typetemp = getType(doc, isType);
 			}
-
+			
+			System.out.println("producting");
+			
 			for (Element e : elist) {
 				if (!selector.getPbase().equals("#"))
 					// 可以获取id 形成链接

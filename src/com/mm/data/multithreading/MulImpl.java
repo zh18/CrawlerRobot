@@ -8,7 +8,7 @@ public class MulImpl implements IMul<String>{
 	protected Stack<String> stack = null;
 	protected boolean upend; 
 	protected String url;
-	
+	protected static boolean end = false;
 	
 	public MulImpl(Stack<String> stack,Doable<String> doable) {
 		this.stack = stack;
@@ -19,8 +19,10 @@ public class MulImpl implements IMul<String>{
 		this.stack = stack;
 	}
 
-	public synchronized String pop() {
-		return stack.pop();
+	public String pop() {
+		synchronized (this) {
+			return stack.pop();
+		}
 	}
 
 	public void shoot(){
@@ -30,27 +32,36 @@ public class MulImpl implements IMul<String>{
 	
 	public void run(){
 		while(true){
-			if(stack.isEmpty() && upend) break;
-			if(stack.isEmpty()) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			//如果stack为空，说明这个东西，不许要上一层的数据。
+			if(stack != null) {
+				if(stack.isEmpty() && (upend || end)) break;
+				if(stack.isEmpty()) {
+					synchronized (doable) {
+						try {
+							wait();
+							System.out.println("stack size"+stack.size()+" wait");
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
 				}
+				url = this.pop();
 			}
-			url = this.pop();
 			try {
-				// when we got an exception  we exit
+				// when we got an exception we exit
 				doable.x(url);
 			}catch(Exception e){
-				//do something
+				break;
 			}
 		}
 	}
 
 	public void push(String ... s){
-		for(String temp:s){
-			this.stack.push(temp);
+		synchronized (this) {
+			for(String temp:s){
+				this.stack.push(temp);
+				System.out.println("we add "+s+" and will be notify");
+			}
 		}
 		notify();
 	}
@@ -59,5 +70,7 @@ public class MulImpl implements IMul<String>{
 		this.doable = d;
 	}
 
-	
+	public static void shootAll(){
+		MulImpl.end = true;
+	}
 }

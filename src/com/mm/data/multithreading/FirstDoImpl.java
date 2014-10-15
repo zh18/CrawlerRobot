@@ -77,5 +77,6 @@ public class FirstDoImpl implements Doable<String> {
 		imul.push(urls);
 		imul.shoot();
 		SystemUtil.writeColl(temp.get(temp.size()-1), selector.getSavepath()+Idata.fname);
+		throw new RuntimeException();
 	}
 }

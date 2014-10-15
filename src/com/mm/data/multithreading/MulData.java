@@ -48,7 +48,7 @@ public class MulData implements Idata {
 		}
 		down = new MulImpl(htmlstack,new DownloadDoImpl(br, bw, factory, error));
 		pro = new MulImpl(prostack, new ProductDoImpl(selector, error,htmset,down));
-		
+		first = new MulImpl(null,new FirstDoImpl(selector, factory, proset, pro));
 	}
 
 	/**
@@ -56,14 +56,6 @@ public class MulData implements Idata {
 	 * download读url下载，没有url时等待，直到product全部退出 
 	 */
 	public MulData(String name,BreakPoint bp){
-		// wait for fisrst step
-		first.run();
-		for(int i=0;i<pthreadn;i++){
-			new Thread(pro).start();
-		}
-		for(int i=0;i<dthreadn;i++){
-			new Thread(down).start();
-		}
 	}
 	
 	public BreakPoint getBreakPoint() {
@@ -75,7 +67,14 @@ public class MulData implements Idata {
 	}
 
 	public void data() throws Exception {
-		
+		// wait for fisrst step
+		new Thread(first).start();
+		for(int i=0;i<pthreadn;i++){
+			new Thread(pro).start();
+		}
+		for(int i=0;i<dthreadn;i++){
+			new Thread(down).start();
+		}
 	}
 
 	public void setFactory(SpiderFactory factory) {
