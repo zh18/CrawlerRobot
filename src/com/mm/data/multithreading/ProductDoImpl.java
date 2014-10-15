@@ -30,20 +30,24 @@ public class ProductDoImpl implements Doable<String> {
 	protected Set<String> checknew = null;
 	
 	
-	public ProductDoImpl(Selector selector,Set<String> error,Set<String> checknew,IMul<String> imul) {
+	public ProductDoImpl(Selector selector,Set<String> error,Set<String> checknew,IMul<String> imul,SpiderFactory factory) {
 		this.error = error;
 		this.selector = selector;
+		this.factory = factory;
+		this.spider = factory.getSpider();
 		this.imul = imul;
 	}
 
 	public void x(String s) throws Exception{
-		if (!check(Idata.FIRST))
+		if(null == s) return;
+		if (!check(Idata.PRODUCT))
 			return;
 		// 查看是否需要加入type文件
 		boolean isType = isTypes();
 		String typetemp = "";
+		System.out.println("producting");
 		do {
-			html = spider.spider(url);
+			html = spider.spider(s);
 			if (null == html) {
 				error.add(url);
 				continue;
@@ -53,20 +57,18 @@ public class ProductDoImpl implements Doable<String> {
 			if (isType) {
 				typetemp = getType(doc, isType);
 			}
-			
-			System.out.println("producting");
-			
 			for (Element e : elist) {
 				if (!selector.getPbase().equals("#"))
 					// 可以获取id 形成链接
 					line = selector.getPbase() + getId(e.attr("href"));
 				else
 					line = e.attr("href");
+				if(line.trim().equals("")) continue;
 				SystemUtil.appendFile(selector.getSavepath() + Idata.uname,
 						line, false);
 				//有新的一行的时候，就把这个链接压入下一个动作的stack
-				if(checknew.add(line))
-					imul.push(line);
+//				if(checknew.add(line))
+//					imul.push(line);
 				if (isType) {
 					SystemUtil.appendFile(selector.getSavepath() + Idata.tname,
 							new Type(typetemp, line).toString(), false);
@@ -74,7 +76,8 @@ public class ProductDoImpl implements Doable<String> {
 			}
 		} while ((url = getNextLink(html, selector.getNbase().equals("#") ? ""
 				: selector.getNbase(), selector.getNext())) != null);
-		imul.shoot();
+		imul.shoot();  //告诉下面的进程，我结束了
+		throw new RuntimeException();  //抛异常，break出去异常
 	}
 
 	protected String getId(String url) {

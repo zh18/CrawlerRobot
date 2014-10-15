@@ -29,11 +29,10 @@ public class FirstDoImpl implements Doable<String> {
 	protected Elements elist = null;
 	protected String html,url,line;
 	
-	public FirstDoImpl(Selector selector,SpiderFactory factory,Set<String> nextSet,IMul<String> imul){
+	public FirstDoImpl(Selector selector,SpiderFactory factory,IMul<String> imul){
 		this.selector = selector;
 		this.factory = factory;
 		spider = factory.getSpider();
-		this.nextSet = nextSet;
 		this.imul = imul;
 	}
 	
@@ -63,6 +62,7 @@ public class FirstDoImpl implements Doable<String> {
 						else
 							line = e.attr("href");
 						temp2.add(line);
+						System.out.println(line);
 					}
 				}
 			}
@@ -77,6 +77,7 @@ public class FirstDoImpl implements Doable<String> {
 		imul.push(urls);
 		imul.shoot();
 		SystemUtil.writeColl(temp.get(temp.size()-1), selector.getSavepath()+Idata.fname);
+		System.out.println("first done");
 		throw new RuntimeException();
 	}
 }

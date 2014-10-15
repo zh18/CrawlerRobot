@@ -10,6 +10,7 @@ import java.util.Stack;
 import com.mm.data.Idata;
 import com.mm.data.struct.Selector;
 import com.mm.spider.SpiderFactory;
+import com.mm.spider.SpiderFactoryImpl;
 import com.mm.stop.BreakPoint;
 import com.mm.util.ReadSelector;
 
@@ -30,10 +31,14 @@ public class MulData implements Idata {
 	protected Stack<String> prostack = null;
 	protected Stack<String> htmlstack = null;
 	
-	private int pthreadn,dthreadn;
+	private int pthreadn=2,dthreadn;
 	
 	protected Set<String> proset = null;
 	protected Set<String> htmset = null;
+	
+	protected Doable<String> downdo = null;
+	protected Doable<String> prodo = null;
+	protected Doable<String> firstdo = null;
 	
 	public MulData(String name,boolean bp){
 		this.name = name;
@@ -41,14 +46,17 @@ public class MulData implements Idata {
 		proset = new HashSet<String>();
 		htmset = new HashSet<String>();
 		selector = ReadSelector.getSelector(name);
+		prostack = new Stack<String>();
+		htmlstack = new Stack<String>();
+		this.factory = new SpiderFactoryImpl();
 		try {
 			br = new BufferedReader(new FileReader(selector.getSavepath()+uname));
 		} catch(Exception e){
 			
 		}
 		down = new MulImpl(htmlstack,new DownloadDoImpl(br, bw, factory, error));
-		pro = new MulImpl(prostack, new ProductDoImpl(selector, error,htmset,down));
-		first = new MulImpl(null,new FirstDoImpl(selector, factory, proset, pro));
+		pro = new MulImpl(prostack, new ProductDoImpl(selector, error,htmset,down,factory));
+		first = new MulImpl(null,new FirstDoImpl(selector, factory, pro));
 	}
 
 	/**
@@ -72,9 +80,9 @@ public class MulData implements Idata {
 		for(int i=0;i<pthreadn;i++){
 			new Thread(pro).start();
 		}
-		for(int i=0;i<dthreadn;i++){
-			new Thread(down).start();
-		}
+//		for(int i=0;i<dthreadn;i++){
+//			new Thread(down).start();
+//		}
 	}
 
 	public void setFactory(SpiderFactory factory) {
@@ -91,5 +99,17 @@ public class MulData implements Idata {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		Idata data = new MulData("T_ppd",false);
+		data.data();
+		Thread thread = new Thread(new Runnable() {
+			public void run() {
+				while(true){
+					System.out.println(Thread.currentThread().getName());
+				}
+			}
+		});
 	}
 }
