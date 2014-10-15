@@ -295,6 +295,16 @@ public class SystemUtil {
 		return result;
 	}
 	
+	public static <T> T[] listToArray(Collection<T> col,T [] t){
+		T temp = null;
+		int index = 0;
+		for(Iterator<T> it=col.iterator();it.hasNext();){
+			temp = it.next();
+			t[index++] = temp;
+		}
+		return t;
+	}
+	
 	public static boolean  iteratorDelete(Object o,Object target) {
 		boolean result = false;
 		if(!(o instanceof Iterable)) return result;

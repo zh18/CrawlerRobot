@@ -20,6 +20,7 @@ public interface Idata {
 			  hfname = DataBase.getString("hname"),
 			  tname = DataBase.getString("tname"),
 			  iname = DataBase.getString("iname"),
+			  ename = DataBase.getString("error"),
 			  mark = "ကကက";
 	
 	
