@@ -63,7 +63,7 @@ public class SuperData implements Idata{
 			fromwhere(null, "0");
 		}
 		else {
-			this.breakpoint = DataBase.getProtection(name);
+//			this.breakpoint = DataBase.getProtection(name);
 			if(null == breakpoint) 
 				this.breakpoint = new BreakPoint("","",name,"#","0");
 			fromwhere(breakpoint.getPname(),breakpoint.getRate());

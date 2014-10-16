@@ -133,7 +133,7 @@ public final class Task implements Runnable {
 	
 	
 	public String toString(){
-		return String.format("%5s", id)+" | "+String.format("%15s", data.getBreakPoint().getWname())+" | "+String.format("%15s",data.getBreakPoint().getPname())+" | "+
+		return String.format("%5s", id)+" | "+String.format("%30s", data.getBreakPoint().getWname())+" | "+String.format("%15s",data.getBreakPoint().getPname())+" | "+
 				String.format("%25s", getRateString())+" | "+String.format("%10s", running);
 	}
 	

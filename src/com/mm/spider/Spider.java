@@ -49,12 +49,13 @@ public class Spider implements ISpider{
 	
 	public String spider(String url){
 		String content =  spider(null,url);
-		int times = 3;
+		int times = 10;
 		try {
 			while(times>0){
 				content = spider(null,url);
 				if(content != null) return content;
 				times --; 
+				Thread.sleep(500);
 			}
 		}catch(Exception e){
 		}

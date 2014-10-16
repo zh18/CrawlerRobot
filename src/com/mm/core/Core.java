@@ -127,7 +127,7 @@ public final class Core {
 			ps.println("we don't have running task here ~   :-) \n");
 			return ;
 		}
-		ps.println(String.format("%5s", "ID")+" | "+String.format("%15s", "name")+" | "+String.format("%15s","Process_name")+" | "+
+		ps.println(String.format("%5s", "ID")+" | "+String.format("%30s", "name")+" | "+String.format("%15s","Process_name")+" | "+
 				String.format("%25s", "Rate")+" | "+String.format("%10s", "Running"));
 		ps.println("----------------------------------------------------------------------------------------");
 		for(Task t:task){
@@ -154,11 +154,29 @@ public final class Core {
 	}
 	
 	public final static void add(String name,boolean bp){
-		task.add(new Task(name,bp));
+		if(checkNames(name))
+			task.add(new Task(name,bp));
 	}
 	
 	public final static void add(String name,String pname,String rate){
 		String iname = name+"."+pname;
-		task.add(new Task(iname,new BreakPoint(iname,pname,rate)));
+		if(checkNames(name))
+			task.add(new Task(iname,new BreakPoint(iname,pname,rate)));
+	}
+	
+	
+	private final static boolean checkNames(String name){
+		List<String> temp = ReadSelector.getAllNames();
+		try {
+			if(name.indexOf("_") != -1 && name.indexOf(".") != -1)
+				name = name.substring(0,name.indexOf(".")).trim();
+		}catch(Exception e){
+		}
+		for(String s:temp){
+			if(s.equals(name.trim())){
+				return true;
+			}
+		}
+		return false;
 	}
 }

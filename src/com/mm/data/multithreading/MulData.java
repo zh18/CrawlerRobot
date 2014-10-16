@@ -21,7 +21,7 @@ public class MulData implements Idata {
 	protected SpiderFactory factory = new SpiderFactoryImpl();
 	protected Stack<String> prostack = null;
 	protected String name;
-	private int pthreadn=2;
+	private int pthreadn=1;
 	
 	protected BreakPoint breakpoint = null;
 	protected Set<String> proset = null;

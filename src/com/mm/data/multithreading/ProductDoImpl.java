@@ -41,13 +41,14 @@ public class ProductDoImpl implements Doable<String> {
 
 	public void x(String s) throws Exception{
 		if(null == s) return;
+		String url = s;
 		if (!check(Idata.PRODUCT))
 			return;
 		// 查看是否需要加入type文件
 		boolean isType = isTypes();
 		String typetemp = "";
 		do {
-			html = spider.spider(s);
+			html = spider.spider(url);
 			if(html != null) 		System.out.println("producting");
 			if (null == html) {
 				error.add(url);

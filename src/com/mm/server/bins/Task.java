@@ -55,12 +55,12 @@ public class Task implements Bin {
 							continue;
 						}
 						// 找到了，则添加
-						os.print("Go on the breakpoint ? y or n : ");
-						Core.add(s.trim(), scan.next().indexOf("y") != -1);
+						os.print("Go on the breakpoint ? yes or no : ");
+						Core.add(s.trim(), scan.nextLine().indexOf("yes") != -1);
 					}
 				} else {
 					os.print("Go on the breakpoint ? y or n : ");
-					Core.add(name, scan.next().indexOf("y") != -1);
+					Core.add(name, scan.nextLine().indexOf("yes") != -1);
 				}
 			} else if (cmd.indexOf("-s") != -1) {
 				Core.start(name);
