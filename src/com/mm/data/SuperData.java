@@ -3,6 +3,7 @@ package com.mm.data;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -114,7 +115,7 @@ public class SuperData implements Idata{
 				doc = Jsoup.parse(html);
 				elist = doc.select(selector.getFselects()[i]);
 				if (elist.size() == 0) {
-					add.add(url);
+					add.add("first"+url);
 					continue;
 				} else {
 					for (Element e : elist) {
@@ -133,6 +134,11 @@ public class SuperData implements Idata{
 			}
 		}
 		SystemUtil.writeColl(temp.get(temp.size()-1), selector.getSavepath()+fname);
+		try {
+			SystemUtil.appendFile(selector.getSavepath()+uname, error);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	protected void pro0(int rate) throws IOException {
@@ -140,7 +146,7 @@ public class SuperData implements Idata{
 		//查看是否需要加入type文件
 		boolean isType = isTypes();
 		String typetemp = "";
-		
+		error.clear();
 		String url = null;
 		List<String> urls = SystemUtil.readLine(selector.getSavepath()+fname);
 		if (rate > urls.size()) return;
@@ -155,11 +161,11 @@ public class SuperData implements Idata{
 				try {
 					html = spider.spider(url);
 				}catch(Exception e){
-					error.add(url);
+					error.add("product:"+url);
 					continue;
 				}
 				if (null == html) {
-					error.add(url);
+					error.add("product:"+url);
 					continue;
 				}
 				doc = Jsoup.parse(html);
@@ -183,6 +189,7 @@ public class SuperData implements Idata{
 				}
 			}while ((url = getNextLink(html,selector.getNbase().equals("#")?"":selector.getNbase(),selector.getNext())) != null);
 		}
+		SystemUtil.appendFile(selector.getSavepath()+ename, error);
 	}
 	
 	protected String getId(String url){
@@ -209,47 +216,54 @@ public class SuperData implements Idata{
 	}
 	
 	protected final void download(int rate) throws IOException{
-		process = DOWNLOAD;
-		List<String> targetlist = SystemUtil.readLine(selector.getSavepath()+uname);
-		int total = targetlist.size();
-		if (rate >= total) return ;
 		String url = "";
+		
+		process = DOWNLOAD;
+		error.clear();
+		long total = SystemUtil.getLineOfFile(selector.getSavepath()+uname);
+		long current = 0L;
+		if (rate >= total) return ;
+
 		File file = new File(selector.getSavepath()+hfname);
 		if (!file.exists()) file.mkdir();
 		int record=rate%10000;  // if rate = 0 so record was 0  
 		bw = new BufferedWriter(new FileWriter(selector.getSavepath()+hfname+File.separator+(record*10000+"~"+(record+1)*10000)));
-		for(int i=rate;i<targetlist.size(); ++i) {
-			breakpoint.setTotla(targetlist.size());
+		br = new BufferedReader(new FileReader(selector.getSavepath()+uname));
+		while((url = br.readLine()) != null) {
+			if(current < rate) {
+				current ++;
+				continue;
+			}
+			breakpoint.setTotla(total);
 			// i use this to stop this thread , not better
 			breakpoint.recover(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()).toString(), 
-					name, process, String.valueOf(i));
-			url = targetlist.get(i);
+					name, process, String.valueOf(current));
 			url = url.trim();
 			if ("".equals(url)) continue;
 			try {
 				html = spider.spider(url);
 			}catch(Exception e){
-				error.add(url);
+				error.add("download:"+url);
 				continue;
 			}
 			if (null == html || "".equals(html)) {
-				error.add(url);
+				error.add("download:"+url);
 				continue;
 			}
 			// ### url ### 在前的方式
-			bw.write("\n"+mark+targetlist.get(i)+mark+"\n");
+			bw.write("\n"+mark+url+mark+"\n");
 			bw.write(html);
-			if (i!= 0 && i%10000 == 0)   {  //每一万个变成一个新文件
+			if (current!= 0 && current%10000 == 0)   {  //每一万个变成一个新文件
 				file = new File(selector.getSavepath()+hfname+File.separator+((++record)*10000+"~"+(record+1)*10000));
 				bw.close();
 				bw = new BufferedWriter(new FileWriter(file));
 			}
 		}
 		bw.close();
+		br.close();
 		if(error.size() != 0){
-			SystemUtil.writeColl(error, selector.getSavepath()+"error.txt");
+			SystemUtil.appendFile(selector.getSavepath()+ename, error);
 		}
-		
 	}
 	
 	

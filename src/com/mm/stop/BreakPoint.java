@@ -8,7 +8,7 @@ public class BreakPoint {
 	private String pname;
 	private String rate;
 	private String done;   /* 0 is done , 1 have not */
-	private transient int total;
+	private transient long total;
 	
 	public BreakPoint(){
 	}
@@ -82,10 +82,10 @@ public class BreakPoint {
 	public void setDone(String done){
 		this.done = done;
 	}
-	public int getTotal(){
+	public long getTotal(){
 		return total;
 	}
-	public void setTotla(int total){
+	public void setTotla(long total){
 		this.total = total;
 	}
 	

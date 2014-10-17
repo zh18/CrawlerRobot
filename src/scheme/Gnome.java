@@ -74,7 +74,8 @@ public class Gnome extends SuperData {
 					JSONArray imagesArray = product.getJSONArray("images");
 					JSONObject urlObject = (JSONObject) imagesArray.get(0); 
 					String pId=(String) urlObject.get("pId");
-					result.add("http://www.gome.com.cn/product/"+pId+".html");
+					String skuid = (String) urlObject.get("skuId");
+					result.add("http://www.gome.com.cn/product/"+pId+".html"+"&"+skuid);
 				}
 			}
 		} catch(Exception e){

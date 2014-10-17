@@ -17,25 +17,23 @@ public class Product implements Bin {
 	public void run(InputStream is, PrintStream os, String cmd) {
 		String name = null;
 		String rate = null;
-		if(cmd.substring(cmd.indexOf("pro")+3).trim().equals("")) {
+		if (cmd.substring(cmd.indexOf("pro") + 3).trim().equals("")) {
 			os.println("pro -n scheme name -r rate");
 			return;
 		}
-		try {
-			if(cmd.indexOf("-n") != -1 && cmd.indexOf("-r") != -1) {
-				name = cmd.substring(cmd.indexOf("-n") + 2, cmd.indexOf("-r"))
-						.trim();
-				rate = cmd.substring(cmd.indexOf("-r") + 2).trim();
-			}
-		} catch (Exception e) {
-			if(cmd.indexOf("-n") != -1)
-				name = cmd.substring(cmd.indexOf("-n")+2).trim();
+		if (cmd.indexOf("-n") != -1 && cmd.indexOf("-r") != -1) {
+			name = cmd.substring(cmd.indexOf("-n") + 2, cmd.indexOf("-r"))
+					.trim();
+			rate = cmd.substring(cmd.indexOf("-r") + 2).trim();
+		} else {
+			if (cmd.indexOf("-n") != -1)
+				name = cmd.substring(cmd.indexOf("-n") + 2).trim();
 			else {
 				os.println("pro -n scheme name -r rate");
 				return;
 			}
 		}
-		if(!Task.fileCheck(name, Idata.PRODUCT)) {
+		if (!Task.fileCheck(name, Idata.PRODUCT)) {
 			os.print("There is no have first files");
 			return;
 		}

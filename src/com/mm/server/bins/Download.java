@@ -36,19 +36,17 @@ public class Download implements Bin {
 			os.println("download -n scheme name | -r rate");
 			return;
 		}
-		try {
 			// little bug here 
-			if(cmd.indexOf("-n") != -1 && cmd.indexOf("-r") != -1) {
-				name = cmd.substring(cmd.indexOf("-n")+2, cmd.indexOf("-r")).trim();
-				rate = cmd.substring(cmd.indexOf("-r")+2).trim();
-			}
-		}catch(Exception e){
-			if(cmd.indexOf("-n") != -1)
-				name = cmd.substring(cmd.indexOf("-n")+2).trim();
-			else {
-				os.println("download -n scheme name | -r rate");
-				return;
-			}
+		if (cmd.indexOf("-n") != -1 && cmd.indexOf("-r") != -1) {
+			name = cmd.substring(cmd.indexOf("-n") + 2, cmd.indexOf("-r"))
+					.trim();
+			rate = cmd.substring(cmd.indexOf("-r") + 2).trim();
+		}
+		else if (cmd.indexOf("-n") != -1)
+			name = cmd.substring(cmd.indexOf("-n") + 2).trim();
+		else {
+			os.println("download -n scheme name | -r rate");
+			return;
 		}
 		if(!Task.fileCheck(name, Idata.DOWNLOAD)) {
 			os.print("There is no have url files , please use first or tk -n scheme first");

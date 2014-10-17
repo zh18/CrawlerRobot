@@ -6,10 +6,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.net.Proxy;
@@ -28,6 +30,71 @@ import java.util.Set;
 import com.mm.logger.Log;
 
 public class SystemUtil {
+	
+	public static synchronized long getLineOfFile(String path) throws IOException {
+		InputStream is = new BufferedInputStream(new FileInputStream(path));
+		byte[] c = new byte[2048];
+		int count = 0;
+		int readChars = 0;
+		while ((readChars = is.read(c)) != -1) {
+			for (int i = 0; i < readChars; ++i) {
+				if (c[i] == '\n')
+					++count;
+		        }
+		}
+		is.close();
+		mulGetLineOfFile(path,3);
+		return 0;
+	}
+	
+	public static synchronized long mulGetLineOfFile(String path,int times) throws IOException {
+		RandomAccessFile raf = new RandomAccessFile(path,"rw");
+		long total = raf.length();
+		long num = 0L;
+		long each = total/times;
+		for(int i=0;i<times-1;i++){
+			num += new SystemUtil().mulgetline0(path,i*each,(i+1)*each);
+		}
+		num += new SystemUtil().mulgetline0(path, (times-1)*each , total);
+		return num;
+	}
+	
+	private long mulgetline0(final String path,long start,long end) throws IOException {
+		inner i = new inner(path,start,end);
+		i.start();
+		return i.num;
+	}
+	
+	class inner extends Thread{
+		long num = 0L;
+		String path = "";
+		long start,end;
+		RandomAccessFile raf = null;
+		
+		public inner(String path,long start,long end){
+			this.path = path;
+			this.start = start;
+			this.end = end;
+		}
+		
+		public void run(){
+			try {
+				raf = new RandomAccessFile(path,"rw");
+				raf.seek(start);
+				raf.setLength(end);
+				byte buffer [] = new byte[2048];
+				int len = 0;
+				String temp = null;
+				while((len = raf.read(buffer)) != -1){
+					temp = new String(buffer,0,len);
+					if(temp.indexOf("\n")!=-1) num++;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	
 	public static void showBar(String name, int now, int total) {
 		StringBuffer result = new StringBuffer("");
