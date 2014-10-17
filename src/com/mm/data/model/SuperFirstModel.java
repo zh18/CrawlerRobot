@@ -1,5 +1,6 @@
-package com.mm.data.multithreading;
+package com.mm.data.model;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,31 +14,31 @@ import org.jsoup.select.Elements;
 
 import com.mm.data.Idata;
 import com.mm.data.struct.Selector;
-import com.mm.exception.MulGoOutException;
 import com.mm.spider.ISpider;
 import com.mm.spider.SpiderFactory;
+import com.mm.stop.BreakPoint;
 import com.mm.util.SystemUtil;
 
-public class FirstDoImpl implements Doable<String> {
+public class SuperFirstModel implements IFirstModel{
 
+	protected BreakPoint bp = null;
 	protected Selector selector = null;
-	protected SpiderFactory factory = null;
 	protected ISpider spider = null;
-	protected Hen<String> hen = null;
-	protected Set<String> nextSet = null;
+	protected String html;
+	protected Document doc;
+	protected Elements elist;
+	protected String line;
 	
-	protected Document doc = null;
-	protected Elements elist = null;
-	protected String html,url,line;
-	
-	public FirstDoImpl(Selector selector,SpiderFactory factory,Hen<String> hen){
-		this.selector = selector;
-		this.factory = factory;
-		spider = factory.getSpider();
-		this.hen = hen;
+	public SuperFirstModel(SpiderFactory sf,BreakPoint bp,Selector selector){
+		spider = sf.getSpider();
+		this.bp = bp;
+		
 	}
 	
-	public void x(String t) throws Exception {
+	
+	public void first0() {
+		bp.setPname(Idata.FIRST);
+		
 		List<String> temp2 = new ArrayList<String>(); // 把根网页中 含有selects的信息提哪家到需要爬取的网页中
 		List<List<String>> temp = new ArrayList<List<String>>(); // 获取循环爬取的网页
 		temp.add(selector.getRootpath());
@@ -45,8 +46,12 @@ public class FirstDoImpl implements Doable<String> {
 		for (int i = 0; i < selector.getFselects().length; i++) {   
 			// 当有第一级为根节点时，加入add列表中，再第二级加入爬取下一级子节点，如果不存再，则继续加入下一节点
 			temp2 = new ArrayList<String>();
+			bp.setTotla(selector.getFselects().length);
 			for (String url : temp.get(i)) {
 				// i use this to stop this thread
+				bp.recover(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()).toString(), 
+						bp.getWname(), Idata.FIRST, String.valueOf(i));
+				
 				html = spider.spider(url);
 				if (html == null) {
 					continue;
@@ -54,7 +59,7 @@ public class FirstDoImpl implements Doable<String> {
 				doc = Jsoup.parse(html);
 				elist = doc.select(selector.getFselects()[i]);
 				if (elist.size() == 0) {
-					add.add(url);
+					add.add("first"+url);
 					continue;
 				} else {
 					for (Element e : elist) {
@@ -63,7 +68,6 @@ public class FirstDoImpl implements Doable<String> {
 						else
 							line = e.attr("href");
 						temp2.add(line);
-						System.out.println(line);
 					}
 				}
 			}
@@ -73,12 +77,11 @@ public class FirstDoImpl implements Doable<String> {
 				add = new ArrayList<String>();
 			}
 		}
-		String [] urls = new String[temp.get(temp.size()-1).size()];
-		urls = SystemUtil.listToArray(temp.get(temp.size()-1), urls);
-		hen.push(urls);
-		hen.shoot();
 		SystemUtil.writeColl(temp.get(temp.size()-1), selector.getSavepath()+Idata.fname);
-		System.out.println("first done");
-		throw new MulGoOutException("first");
-	}
+		try {
+			SystemUtil.appendFile(selector.getSavepath()+Idata.uname, Idata.ename);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}	
 }

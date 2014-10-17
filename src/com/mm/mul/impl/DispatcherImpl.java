@@ -30,12 +30,20 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 		if(null != pots) {
 			if (pots.size() < Dispatcher.MAXPOT) {
 				pots.add(pot);
+				new Thread(pot).start();
 				return true;
 			}
 		}
 		return false;
 	}
 
+	public boolean full(){
+		if(null != cins){
+			return cins.size() == MAXCINS;
+		}
+		return false;
+	}
+	
 	public boolean cutPot(int id) {
 		if (id == -1 && null != pots && pots.size()>0){
 			pots.get(potSize()-1).setVisiable(false);

@@ -9,7 +9,7 @@ package com.mm.mul;
 
 import java.util.Queue;
 
-public interface Pot<T> {
+public interface Pot<T> extends Runnable{
 	
 	public int MAXSIZE = 50;
 	

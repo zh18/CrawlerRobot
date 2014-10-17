@@ -10,7 +10,7 @@ import java.util.Queue;
 import com.mm.mul.Doable;
 import com.mm.mul.Pot;
 
-public class PotImpl<T> implements Pot<T>,Runnable{
+public class PotImpl<T> implements Pot<T>{
 
 	private int id = 0;
 	private boolean visiable = true;

@@ -299,7 +299,7 @@ public class SuperData implements Idata{
 		return selector;
 	}
 	//----------------------------------check uname fname 是否存在
-	private boolean check(String part){
+	public  boolean check(String part){
 		if(part.equals(PRODUCT))
 			return check0(selector.getSavepath()+fname);
 		else if(part.equals(DOWNLOAD))

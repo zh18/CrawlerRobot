@@ -173,6 +173,35 @@ public class SystemUtil {
 		br.close();
 	}
 	
+	
+	public static void appendFile(String path,String line,Object lock) throws IOException{
+		RandomAccessFile raf = new RandomAccessFile(path, "rw");
+		raf.seek(raf.length());
+		raf.writeBytes(line+"\n");
+		raf.close();
+	}
+	
+	public static void appendFile(String path,Collection<String> col,Object lock) throws IOException {
+		RandomAccessFile raf = new RandomAccessFile(path,"rw");
+		raf.seek(raf.length());
+		for(String s:col){
+			raf.write((s+"\n").getBytes());
+		}
+		raf.close();
+	}
+	
+	public static void appendFile(String path,File dpath,Object lock) throws IOException {
+		RandomAccessFile raf = new RandomAccessFile(dpath,"rw");
+		raf.seek(raf.length());
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		String line="";
+		while((line = br.readLine()) != null){
+			raf.write((line+"\n").getBytes());
+		}
+		raf.close();
+		br.close();
+	}
+	
 	/**
 	 * 按照给定的路径，制定的包名加载类
 	 * @param path class文件存放路径
