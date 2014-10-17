@@ -43,8 +43,9 @@ public class SystemUtil {
 		        }
 		}
 		is.close();
-		mulGetLineOfFile(path,3);
-		return 0;
+		return count;
+//		mulGetLineOfFile(path,3);
+//		return mulGetLineOfFile(path,5);
 	}
 	
 	public static synchronized long mulGetLineOfFile(String path,int times) throws IOException {
@@ -82,12 +83,14 @@ public class SystemUtil {
 				raf = new RandomAccessFile(path,"rw");
 				raf.seek(start);
 				raf.setLength(end);
-				byte buffer [] = new byte[2048];
+				byte buffer [] = new byte[1024];
 				int len = 0;
 				String temp = null;
 				while((len = raf.read(buffer)) != -1){
-					temp = new String(buffer,0,len);
-					if(temp.indexOf("\n")!=-1) num++;
+					for(int i=0;i<len;i++){
+						if(buffer[i]=='\n') 
+							num++;
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
