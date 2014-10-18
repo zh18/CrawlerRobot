@@ -23,7 +23,7 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 	private boolean alive = true;
 	
 	public DispatcherImpl(){
-		
+		cins = new Stack<T>();
 	}
 	
 	public boolean addPot(Pot<T> pot) {

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mm.data.Idata;
+import com.mm.data.multithreading.MulDown;
 import com.mm.data.struct.Selector;
 import com.mm.db.DataBase;
 import com.mm.logger.Log;
@@ -26,12 +27,18 @@ public final class Task implements Runnable {
 							   STOP = "stop",
 							   RUNNING = "running";
 	
-	protected final static String fname = DataBase.getString("fname"),
-			  uname = DataBase.getString("uname"),
-			  hfname = DataBase.getString("hname"),
-			  tname = DataBase.getString("tname"),
-			  iname = DataBase.getString("iname"),
-			  mark = "ကကက";
+//	protected final static String fname = DataBase.getString("fname"),
+//			  uname = DataBase.getString("uname"),
+//			  hfname = DataBase.getString("hname"),
+//			  tname = DataBase.getString("tname"),
+//			  iname = DataBase.getString("iname"),
+//			  mark = "ကကက";
+	protected final static String fname = "first.txt",
+	  uname = "url.txt",
+	  hfname = "html",
+	  tname = "type.txt",
+	  iname = "info.txt",
+	  mark = "ကကက";
 	
 	
 	private String id;
@@ -104,6 +111,36 @@ public final class Task implements Runnable {
 				} catch (Exception e) {
 					Log.logger.error("Task init error",e);
 				} 
+				// 设置断点信息
+				data.setBreakPoint(breakpoint);
+				// 设置蜘蛛   data下载时候的data由task设置
+				data.setFactory(factory);
+				// 设置选择器 selector
+				data.setSelector(ReadSelector.getSelector(name));
+				// 设置初始状态
+				running = START;
+	}
+	
+	public Task(String name,BreakPoint breakpoint,boolean mul){
+		// 设置id
+				id = String.valueOf(TASK_ID++);
+				// 设置名字
+				this.name = name;
+				// 设置爬虫工厂
+				factory = new SpiderFactoryImpl();
+				// 实例化data
+				Class clazz = null;
+//				try {
+//					clazz = Class.forName(SYS.SYS_DG_SCHEME+"."+name.split("_")[0].trim());
+//					data = (Idata)clazz.newInstance();
+					data = new MulDown();   // 只适用于当当
+					// 设置名字
+					data.setName(name);
+//				} catch(ClassNotFoundException e){
+//					Log.logger.error("Data class not found error",e);
+//				} catch (Exception e) {
+//					Log.logger.error("Task init error",e);
+//				} 
 				// 设置断点信息
 				data.setBreakPoint(breakpoint);
 				// 设置蜘蛛   data下载时候的data由task设置

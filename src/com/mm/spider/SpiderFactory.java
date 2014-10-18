@@ -10,6 +10,8 @@ public interface SpiderFactory {
 	
 	public ISpider getSpider();
 
+	public ISpider getSpider(String name);
+	
 	public void writeError(String path,String url);
 	
 	public void push(String str);

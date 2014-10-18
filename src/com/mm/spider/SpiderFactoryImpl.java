@@ -24,6 +24,13 @@ public class SpiderFactoryImpl implements SpiderFactory {
 		return switchSpider();
 	}
 	
+	public ISpider getSpider(String name){
+		if (name.toLowerCase().startsWith("tmall")) {
+			return new Spider_TMall();
+		}
+		else return new Spider();
+	}
+	
 	private ISpider switchSpider(){
 		switch(level){
 		case 0:

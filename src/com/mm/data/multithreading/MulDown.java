@@ -26,7 +26,7 @@ public class MulDown implements Idata {
 	Set<String> error = null;
 	Doable<String> downdo = new DownDo(selector, breakpoint, sf, error);
 	Dispatcher<String> downdis = new DispatcherImpl<String>();
-	private int nums = 0;
+	private int nums = 5;
 	
 	public MulDown(){
 		name = this.getClass().getName();
@@ -96,7 +96,7 @@ public class MulDown implements Idata {
 	
 	private boolean check0(String name){
 		File file = new File(name);
-		if (file.exists() && SystemUtil.readLine(name).size() > 0)
+		if (file.exists())
 			return true;
 		return false;
 	}

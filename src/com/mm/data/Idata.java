@@ -15,14 +15,20 @@ public interface Idata {
 				  INFO = "info",
 				  DONE = "done";
 	
-	public final static String fname = DataBase.getString("fname"),
-			  uname = DataBase.getString("uname"),
-			  hfname = DataBase.getString("hname"),
-			  tname = DataBase.getString("tname"),
-			  iname = DataBase.getString("iname"),
-			  ename = DataBase.getString("error"),
+//	public final static String fname = DataBase.getString("fname"),
+//			  uname = DataBase.getString("uname"),
+//			  hfname = DataBase.getString("hname"),
+//			  tname = DataBase.getString("tname"),
+//			  iname = DataBase.getString("iname"),
+//			  ename = DataBase.getString("error"),
+//			  mark = "ကကက";
+	public final static String fname = "first.txt",
+			  uname = "url.txt",
+			  hfname = "html",
+			  tname = "type.txt",
+			  iname = "info.txt",
+			  ename = "error",
 			  mark = "ကကက";
-	
 	
 	public BreakPoint getBreakPoint();
 	

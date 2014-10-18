@@ -32,20 +32,28 @@ import com.mm.logger.Log;
 public class SystemUtil {
 	
 	public static synchronized long getLineOfFile(String path) throws IOException {
-		InputStream is = new BufferedInputStream(new FileInputStream(path));
-		byte[] c = new byte[2048];
-		int count = 0;
-		int readChars = 0;
-		while ((readChars = is.read(c)) != -1) {
-			for (int i = 0; i < readChars; ++i) {
-				if (c[i] == '\n')
-					++count;
-		        }
+//		InputStream is = new BufferedInputStream(new FileInputStream(path));
+//		byte[] c = new byte[2048];
+//		int count = 0;
+//		int readChars = 0;
+//		while ((readChars = is.read(c)) != -1) {
+//			for (int i = 0; i < readChars; ++i) {
+//				if (c[i] == '\n')
+//					++count;
+//		        }
+//		}
+//		is.close();
+//		return count;
+		RandomAccessFile raf = new RandomAccessFile(path,"rw");
+		long num = 0L;
+		byte buffer [] = new byte[2048];
+		int len = 0;
+		while((len = raf.read(buffer)) != -1){
+			for(int i=0;i<len;i++){
+				if ((buffer[i] | 0xa) == 0xa) num ++;
+			}
 		}
-		is.close();
-		return count;
-//		mulGetLineOfFile(path,3);
-//		return mulGetLineOfFile(path,5);
+		return num;
 	}
 	
 	public static synchronized long mulGetLineOfFile(String path,int times) throws IOException {
@@ -79,22 +87,7 @@ public class SystemUtil {
 		}
 		
 		public void run(){
-			try {
-				raf = new RandomAccessFile(path,"rw");
-				raf.seek(start);
-				raf.setLength(end);
-				byte buffer [] = new byte[1024];
-				int len = 0;
-				String temp = null;
-				while((len = raf.read(buffer)) != -1){
-					for(int i=0;i<len;i++){
-						if(buffer[i]=='\n') 
-							num++;
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			
 		}
 	}
 	

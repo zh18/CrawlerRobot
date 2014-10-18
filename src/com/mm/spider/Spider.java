@@ -25,7 +25,7 @@ public class Spider implements ISpider{
 			conn.setRequestProperty("User-Agent",
 					"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0");
 			conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
-//			conn.setRequestProperty("Referer", "http://www.suning.com/");
+//			conn.setRequestProperty("Referer", "http://www.tmall.com");
 //			conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
 			conn.connect();
 			String charset = conn.getContentType();
@@ -91,7 +91,7 @@ public class Spider implements ISpider{
 	
 	
 	public static void main(String[] args) throws IOException {
-		SystemUtil.write("/home/public/Desktop/test.txt",
-				(new Spider().spider("http://www.amazon.com/s/ref=lp_283155_nr_n_0/182-4196846-6490334?rh=n%3A283155%2Cn%3A!1000%2Cn%3A1&bbn=1000&ie=UTF8&qid=1413197310&rnid=1000")));
+		SystemUtil.write("/home/public/Desktop/test.html",
+				(new Spider().spider("http://list.tmall.com/search_product.htm?spm=a220m.1000858.0.0.HlegBj&cat=50026506&sort=s&style=g&search_condition=7&from=sn_1_rightnav&active=1&industryCatId=50026506#J_crumbs")));
 	}
 }

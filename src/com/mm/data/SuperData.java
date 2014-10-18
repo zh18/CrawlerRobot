@@ -115,7 +115,7 @@ public class SuperData implements Idata{
 				doc = Jsoup.parse(html);
 				elist = doc.select(selector.getFselects()[i]);
 				if (elist.size() == 0) {
-					add.add("first"+url);
+					add.add(url);
 					continue;
 				} else {
 					for (Element e : elist) {
@@ -133,9 +133,9 @@ public class SuperData implements Idata{
 				add = new ArrayList<String>();
 			}
 		}
-		SystemUtil.writeColl(temp.get(temp.size()-1), selector.getSavepath()+fname);
+		SystemUtil.writeColl(temp.get(temp.size()-1), selector.getSavepath()+Idata.fname);
 		try {
-			SystemUtil.appendFile(selector.getSavepath()+uname, error);
+			SystemUtil.appendFile(selector.getSavepath()+ename, error);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -279,7 +279,7 @@ public class SuperData implements Idata{
 	// ---------------------------------  task 反射时需要的信息
 	public final void setFactory(SpiderFactory factory){
 		this.factory = factory;
-		spider = factory.getSpider();
+		spider = factory.getSpider(name);
 	}
 	public final void setSelector(Selector selector){
 		this.selector = selector;
