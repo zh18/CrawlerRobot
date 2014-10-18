@@ -4,14 +4,13 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 import com.mm.core.Core;
-import com.mm.core.Task;
 import com.mm.data.Idata;
 import com.mm.server.Bin;
 
-public class MulDown implements Bin {
-
+public class MulPro implements Bin{
+	
 	public String getName() {
-		return "md : multithreading download ";
+		return "mp : multithreading product ";
 	}
 
 	public void run(InputStream is, PrintStream os, String cmd) {
@@ -21,7 +20,7 @@ public class MulDown implements Bin {
 		String threadnumbers = null;
 		int nums = -1;
 		if(cmd.substring(2).trim().equals("")) {
-			os.println("md scheme_name -r rate -t thread numbers");
+			os.println("mp scheme_name -r rate -t thread numbers");
 			return ;
 		}
 		else {
@@ -47,5 +46,5 @@ public class MulDown implements Bin {
 		
 		Core.addMul(name, cmd.startsWith("md")?Idata.DOWNLOAD:Idata.PRODUCT, rate,nums);
 	}
-
+	
 }

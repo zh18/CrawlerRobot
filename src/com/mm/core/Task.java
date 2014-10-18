@@ -151,8 +151,6 @@ public final class Task implements Runnable {
 				
 				// 设置初始状态
 				running = START;
-				
-				this.data = data;
 	}
 	
 	public void run(){

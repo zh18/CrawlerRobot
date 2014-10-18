@@ -36,7 +36,7 @@ public class DoPro implements Doable<String>{
 		this.error = error;
 		Class<IProductModel> clazz = null;
 		
-		pro = new SuperProductModel();
+		pro = new SuperProductModel(selector, sf, bp, error);
 		
 		try {
 //			clazz = Class.forName(className);
@@ -52,7 +52,7 @@ public class DoPro implements Doable<String>{
 		}
 		int rate = Integer.parseInt(bp.getRate());
 		try {
-			SystemUtil.appendFile(selector.getSavepath()+Idata.uname, pro.getPro0(t),this);
+			pro.getPro0(t);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

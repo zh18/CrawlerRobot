@@ -13,8 +13,8 @@ import com.mm.util.SystemUtil;
 public class StartServer {
 
 //	private final static int PORT = 9998;
-//	private final static int PORT = 8888;
-	private final static int PORT = 7777;
+	private final static int PORT = 8888;
+//	private final static int PORT = 7777;
 //	private final static int PORT = 6666;
 	private static ServerSocket ss = null;
 	private static Socket s = null;

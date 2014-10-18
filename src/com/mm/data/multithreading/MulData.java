@@ -50,16 +50,19 @@ public class MulData implements Idata {
 		if(breakpoint.getRate().equals("")){
 			breakpoint.setRate("0");
 		}
-		if(breakpoint.getPname().equals(Idata.PRODUCT))
+		BufferedReader br = null;
+		if(breakpoint.getPname().equals(Idata.PRODUCT)) {
 		    doable = new DoPro(selector, breakpoint, sf, error);
-		else if (breakpoint.getPname().equals(Idata.DOWNLOAD))
+		    br = new BufferedReader(new FileReader(selector.getSavepath()+fname));
+		}
+		else if (breakpoint.getPname().equals(Idata.DOWNLOAD)) {
 			doable = new DoDown(selector, breakpoint, sf, error);
-		
+		    br = new BufferedReader(new FileReader(selector.getSavepath()+fname));
+		}
 		for(int i=0;i<nums;i++){
 			dispatcher.addPot(new PotImpl<String>(i, doable));
 		}
 		dis.start();
-		BufferedReader br = new BufferedReader(new FileReader(selector.getSavepath()+uname));
 		String line = null;
 		while((line = br.readLine()) != null){
 			if(dispatcher.full()){
