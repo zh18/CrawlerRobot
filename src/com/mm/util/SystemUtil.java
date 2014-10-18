@@ -173,7 +173,7 @@ public class SystemUtil {
 	public static void appendFile(String path,String line,Object lock) throws IOException{
 		RandomAccessFile raf = new RandomAccessFile(path, "rw");
 		raf.seek(raf.length());
-		raf.writeBytes(line+"\n");
+		raf.write((line+"\n").getBytes());
 		raf.close();
 	}
 	

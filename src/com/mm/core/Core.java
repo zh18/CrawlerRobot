@@ -164,10 +164,10 @@ public final class Core {
 			task.add(new Task(iname,new BreakPoint(iname,pname,rate)));
 	}
 	
-	public final static void addMul(String name,String pname,String rate){
+	public final static void addMul(String name,String pname,String rate,int nums){
 		String iname = name+"."+pname;
 		if(checkNames(name)){
-			task.add(new Task(iname,new BreakPoint(iname,pname,rate),true));
+			task.add(new Task(iname,new BreakPoint(iname,pname,rate),nums));
 		}
 	}
 	

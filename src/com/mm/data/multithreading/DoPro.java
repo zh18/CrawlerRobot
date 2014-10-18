@@ -7,6 +7,7 @@ import org.jsoup.select.Elements;
 
 import com.mm.data.Idata;
 import com.mm.data.model.IProductModel;
+import com.mm.data.model.SuperProductModel;
 import com.mm.data.struct.Selector;
 import com.mm.mul.Doable;
 import com.mm.spider.ISpider;
@@ -28,12 +29,15 @@ public class DoPro implements Doable<String>{
 	 */
 	protected IProductModel pro = null;
 	
-	public DoPro(SpiderFactory sf,Selector selector,BreakPoint bp,Set<String> error){
+	public DoPro(Selector selector,BreakPoint bp,SpiderFactory sf,Set<String> error){
 		spider = sf.getSpider();
 		this.selector = selector;
 		this.bp = bp;
 		this.error = error;
 		Class<IProductModel> clazz = null;
+		
+		pro = new SuperProductModel();
+		
 		try {
 //			clazz = Class.forName(className);
 		}catch(Exception e){

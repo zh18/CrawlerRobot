@@ -313,4 +313,8 @@ public class SuperData implements Idata{
 			return true;
 		return false;
 	}
+	
+	public void setNums(int nums){
+		
+	}
 }

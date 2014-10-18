@@ -17,29 +17,35 @@ public class MulDown implements Bin {
 	public void run(InputStream is, PrintStream os, String cmd) {
 		// scheme name
 		String name = null;
-		String rate = null;
-		if (cmd.substring(cmd.indexOf("md") + 2).trim().equals("")) {
-			os.println("md -n scheme name | -r rate");
-			return;
+		String rate = "0";
+		String threadnumbers = null;
+		int nums = -1;
+		if(cmd.substring(2).trim().equals("")) {
+			os.println("md scheme_name -r rate -t thread numbers");
+			return ;
 		}
-		// little bug here
-		if (cmd.indexOf("-n") != -1 && cmd.indexOf("-r") != -1) {
-			name = cmd.substring(cmd.indexOf("-n") + 2, cmd.indexOf("-r"))
-					.trim();
-			rate = cmd.substring(cmd.indexOf("-r") + 2).trim();
-		} else if (cmd.indexOf("-n") != -1)
-			name = cmd.substring(cmd.indexOf("-n") + 2).trim();
 		else {
-			os.println("md -n scheme name | -r rate");
-			return;
+			name = cmd.substring(2).trim();
+			try {
+				name = name.substring(0, name.indexOf(" ")).trim();
+			}catch(Exception e){
+			}
 		}
-		if (!Task.fileCheck(name, Idata.DOWNLOAD)) {
-			os.print("There is no have url files , please use first or tk -n scheme first");
-			return;
+		if(cmd.indexOf("-r") != -1){
+			rate = cmd.substring(cmd.indexOf("-r")+2);
+			try {
+				rate = rate.substring(0, rate.indexOf(" "));
+			}catch(Exception e){
+			}
 		}
-		if (null == rate)
-			rate = "0";
-		Core.addMul(name, Idata.DOWNLOAD, rate);
+		else if(cmd.indexOf("-t") != -1){
+			threadnumbers = cmd.substring(cmd.indexOf("-t")+2).trim();
+			try {
+				nums = Integer.parseInt(threadnumbers);
+			}catch(Exception e){}
+		}
+		
+		Core.addMul(name, Idata.DOWNLOAD, rate,nums);
 	}
 
 }

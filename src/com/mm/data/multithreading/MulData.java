@@ -17,18 +17,18 @@ import com.mm.spider.SpiderFactoryImpl;
 import com.mm.stop.BreakPoint;
 import com.mm.util.SystemUtil;
 
-public class MulDown implements Idata {
+public class MulData implements Idata {
 
 	Selector selector = null;
 	BreakPoint breakpoint = null;
 	SpiderFactory sf = new SpiderFactoryImpl();
 	String name = null;
 	Set<String> error = null;
-	Doable<String> downdo = null;
-	Dispatcher<String> downdis = new DispatcherImpl<String>();
+	Doable<String> doable = null;
+	Dispatcher<String> dispatcher = new DispatcherImpl<String>();
 	private int nums = 5;
 	
-	public MulDown(){
+	public MulData(){
 		error = new HashSet<String>();
 	}
 	
@@ -41,24 +41,28 @@ public class MulDown implements Idata {
 	}
 
 	public void data() throws Exception {
-		if(!check(Idata.DOWNLOAD)) {
-			System.out.println("there is no url file");
+		if(!check(breakpoint.getPname())) {
+			System.out.println("there is no "+breakpoint.getPname()+" file");
 			return ;
 		}
-		Thread dis = new Thread(downdis);
+		Thread dis = new Thread(dispatcher);
 		breakpoint.setTotla(SystemUtil.getLineOfFile(selector.getSavepath()+uname));
 		if(breakpoint.getRate().equals("")){
 			breakpoint.setRate("0");
 		}
-		downdo = new DownDo(selector, breakpoint, sf, error);
+		if(breakpoint.getPname().equals(Idata.PRODUCT))
+		    doable = new DoPro(selector, breakpoint, sf, error);
+		else if (breakpoint.getPname().equals(Idata.DOWNLOAD))
+			doable = new DoDown(selector, breakpoint, sf, error);
+		
 		for(int i=0;i<nums;i++){
-			downdis.addPot(new PotImpl<String>(i, downdo));
+			dispatcher.addPot(new PotImpl<String>(i, doable));
 		}
 		dis.start();
 		BufferedReader br = new BufferedReader(new FileReader(selector.getSavepath()+uname));
 		String line = null;
 		while((line = br.readLine()) != null){
-			if(downdis.full()){
+			if(dispatcher.full()){
 				try {
 					Thread.sleep(50);
 				}catch(Exception e){
@@ -66,10 +70,10 @@ public class MulDown implements Idata {
 				}
 			}
 			else
-				downdis.cin(line);
+				dispatcher.cin(line);
 		}
 		br.close();
-		downdis.live(false);
+		dispatcher.live(false);
 	}
 
 	public void setFactory(SpiderFactory factory) {
@@ -101,5 +105,12 @@ public class MulDown implements Idata {
 		if (file.exists())
 			return true;
 		return false;
+	}
+	
+	public void setNums(int nums){
+		if(nums>0){
+			this.nums = nums;
+		}
+		else this.nums = 5;
 	}
 }

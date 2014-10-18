@@ -43,5 +43,7 @@ public interface Idata {
 	public Selector getSelector();
 	
 	public void setName(String name);
+	
+	public void setNums(int nums);
 
 }
