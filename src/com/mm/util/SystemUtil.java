@@ -27,42 +27,24 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.junit.runner.Runner;
+
 import com.mm.logger.Log;
 
 public class SystemUtil {
 	
 	public static synchronized long getLineOfFile(String path) throws IOException {
-//		InputStream is = new BufferedInputStream(new FileInputStream(path));
-//		byte[] c = new byte[2048];
-//		int count = 0;
-//		int readChars = 0;
-//		while ((readChars = is.read(c)) != -1) {
-//			for (int i = 0; i < readChars; ++i) {
-//				if (c[i] == '\n')
-//					++count;
-//		        }
-//		}
-//		is.close();
-//		return count;
-		RandomAccessFile raf = new RandomAccessFile(path,"rw");
-		long num = 0L;
-		byte buffer [] = new byte[2048];
-		int len = 0;
-		while((len = raf.read(buffer)) != -1){
-			for(int i=0;i<len;i++){
-				if ((buffer[i] | 0xa) == 0xa) num ++;
-			}
-		}
+		long num = mulGetLineOfFile(path, 2);
 		return num;
 	}
 	
-	public static synchronized long mulGetLineOfFile(String path,int times) throws IOException {
+	private static synchronized long mulGetLineOfFile(String path,int times) throws IOException {
 		RandomAccessFile raf = new RandomAccessFile(path,"rw");
 		long total = raf.length();
 		long num = 0L;
 		long each = total/times;
 		for(int i=0;i<times-1;i++){
-			num += new SystemUtil().mulgetline0(path,i*each,(i+1)*each);
+			num += new SystemUtil().mulgetline0(path,i*each,i*each+each);
 		}
 		num += new SystemUtil().mulgetline0(path, (times-1)*each , total);
 		return num;
@@ -70,11 +52,16 @@ public class SystemUtil {
 	
 	private long mulgetline0(final String path,long start,long end) throws IOException {
 		inner i = new inner(path,start,end);
-		i.start();
+		Thread t = new Thread(i);
+		t.start();
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+		}
 		return i.num;
 	}
 	
-	class inner extends Thread{
+	private class inner implements Runnable{
 		long num = 0L;
 		String path = "";
 		long start,end;
@@ -87,7 +74,23 @@ public class SystemUtil {
 		}
 		
 		public void run(){
-			
+			try {
+				byte buffer[] = new byte[2048];
+				raf = new RandomAccessFile(path,"rw");
+				raf.seek(start);
+				int len = 0;
+				while (end - raf.getFilePointer() > buffer.length && (len=raf.read(buffer)) != -1){
+					for(int i=0;i<len;i++)
+						if((buffer[i] | 0xa) == 0xa)
+							num++;
+				}
+				len = raf.read(buffer, 0, (int)(end-raf.getFilePointer()));
+				for(int i=0;i<len;i++)
+					if((buffer[i] | 0xa) == 0xa)
+						num++;
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 	

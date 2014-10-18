@@ -24,12 +24,11 @@ public class MulDown implements Idata {
 	SpiderFactory sf = new SpiderFactoryImpl();
 	String name = null;
 	Set<String> error = null;
-	Doable<String> downdo = new DownDo(selector, breakpoint, sf, error);
+	Doable<String> downdo = null;
 	Dispatcher<String> downdis = new DispatcherImpl<String>();
 	private int nums = 5;
 	
 	public MulDown(){
-		name = this.getClass().getName();
 		error = new HashSet<String>();
 	}
 	
@@ -46,8 +45,12 @@ public class MulDown implements Idata {
 			System.out.println("there is no url file");
 			return ;
 		}
-		// 开启downdispatcher服务
 		Thread dis = new Thread(downdis);
+		breakpoint.setTotla(SystemUtil.getLineOfFile(selector.getSavepath()+uname));
+		if(breakpoint.getRate().equals("")){
+			breakpoint.setRate("0");
+		}
+		downdo = new DownDo(selector, breakpoint, sf, error);
 		for(int i=0;i<nums;i++){
 			downdis.addPot(new PotImpl<String>(i, downdo));
 		}
@@ -62,16 +65,15 @@ public class MulDown implements Idata {
 					e.printStackTrace();
 				}
 			}
-			else {
+			else
 				downdis.cin(line);
-			}
 		}
 		br.close();
 		downdis.live(false);
 	}
 
 	public void setFactory(SpiderFactory factory) {
-		// do nothing
+		this.sf = factory;
 	}
 
 	public void setSelector(Selector selector) {
@@ -100,9 +102,4 @@ public class MulDown implements Idata {
 			return true;
 		return false;
 	}
-	
-	public void setNum(int num){
-		this.nums = num;
-	}
-	
 }

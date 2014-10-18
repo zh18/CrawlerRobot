@@ -5,6 +5,7 @@
  */
 package com.mm.mul.impl;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 import com.mm.mul.Doable;
@@ -20,6 +21,7 @@ public class PotImpl<T> implements Pot<T>{
 	public PotImpl(int id,Doable<T> doable){
 		this.id = id;
 		this.doable = doable;
+		body = new LinkedList<T>();
 	}
 	
 	public int getId() {

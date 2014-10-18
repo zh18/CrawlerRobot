@@ -1,10 +1,12 @@
 package com.mm.mul.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
 import com.mm.mul.Dispatcher;
+import com.mm.mul.Doable;
 import com.mm.mul.Pot;
 
 /**
@@ -21,10 +23,18 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 	private List<Pot<T>> pots = null;
 	private Stack<T> cins = null;
 	private boolean alive = true;
+	private Doable<T> doable = null;
 	
 	public DispatcherImpl(){
 		cins = new Stack<T>();
+		pots = new ArrayList<Pot<T>>();
 	}
+	
+	
+	public void setDoable(Doable<T> doable){
+		this.doable = doable;
+	}
+	
 	
 	public boolean addPot(Pot<T> pot) {
 		if(null != pots) {
@@ -69,9 +79,10 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 	
 	public void dispatcher() {
 		for(Pot<T> p:pots){
-			if(!p.full() && !pots.isEmpty()){
+			if(!p.full() && !cins.isEmpty()){
 				p.put(cins.pop());
 			}
+			if(cins.isEmpty()) break;
 		}
 	}
 

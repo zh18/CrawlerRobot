@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 import com.mm.util.SystemUtil;
+import com.sun.swing.internal.plaf.synth.resources.synth;
 
 public class Spider implements ISpider{
 	
@@ -17,7 +18,7 @@ public class Spider implements ISpider{
 	
 	public Spider(){}
 	
-	public String spider(Proxy proxy,String url) {
+	public synchronized String spider(Proxy proxy,String url) {
 		StringBuffer content = new StringBuffer();
 		try {
 			conn = getConnection(proxy, url);
@@ -27,8 +28,13 @@ public class Spider implements ISpider{
 			conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
 //			conn.setRequestProperty("Referer", "http://www.tmall.com");
 //			conn.setRequestProperty("Accept-Encoding", "gzip, deflate");
-			conn.connect();
-			String charset = conn.getContentType();
+			String charset = null;
+			try {
+				conn.connect();
+				charset = conn.getContentType();
+			}catch(Exception e){
+				return null;
+			}
 			if(charset == null || charset.indexOf('=') < 0)
 				charset = "gbk";
 			else if(charset.equalsIgnoreCase("gbk"))
@@ -49,13 +55,13 @@ public class Spider implements ISpider{
 	
 	public String spider(String url){
 		String content =  spider(null,url);
-		int times = 10;
 		try {
-			while(times>0){
+			int i=0;
+			while(content != null){
 				content = spider(null,url);
+				i ++;
 				if(content != null) return content;
-				times --; 
-				Thread.sleep(500);
+				if(i>REMAX) return null;
 			}
 		}catch(Exception e){
 		}
