@@ -47,7 +47,7 @@ public class MulData implements Idata {
 		}
 		Thread dis = new Thread(dispatcher);
 		breakpoint.setTotla(SystemUtil.getLineOfFile(selector.getSavepath()+uname));
-		if(breakpoint.getRate().equals("")){
+		if(breakpoint.getRate().trim().equals("")){
 			breakpoint.setRate("0");
 		}
 		BufferedReader br = null;
@@ -57,14 +57,20 @@ public class MulData implements Idata {
 		}
 		else if (breakpoint.getPname().equals(Idata.DOWNLOAD)) {
 			doable = new DoDown(selector, breakpoint, sf, error);
-		    br = new BufferedReader(new FileReader(selector.getSavepath()+fname));
+		    br = new BufferedReader(new FileReader(selector.getSavepath()+uname));
 		}
 		for(int i=0;i<nums;i++){
 			dispatcher.addPot(new PotImpl<String>(i, doable));
 		}
 		dis.start();
 		String line = null;
+		
+		int skip = 0;
 		while((line = br.readLine()) != null){
+			if(breakpoint.getRate().trim().equals("")) {
+				breakpoint.setRate("0");
+			}
+			if(skip++ < Integer.parseInt(breakpoint.getRate())) continue;
 			if(dispatcher.full()){
 				try {
 					Thread.sleep(50);
@@ -77,6 +83,7 @@ public class MulData implements Idata {
 		}
 		br.close();
 		dispatcher.live(false);
+		dis.join();
 	}
 
 	public void setFactory(SpiderFactory factory) {

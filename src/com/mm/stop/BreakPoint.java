@@ -9,6 +9,7 @@ public class BreakPoint {
 	private String rate;
 	private String done;   /* 0 is done , 1 have not */
 	private transient long total;
+	private transient boolean newfile = true;
 	
 	public BreakPoint(){
 	}
@@ -86,6 +87,18 @@ public class BreakPoint {
 		return total;
 	}
 	public void setTotla(long total){
+		this.total = total;
+	}
+
+	public boolean getNewfile() {
+		return newfile;
+	}
+
+	public void setNewfile(boolean newfile) {
+		this.newfile = newfile;
+	}
+
+	public void setTotal(long total) {
 		this.total = total;
 	}
 	

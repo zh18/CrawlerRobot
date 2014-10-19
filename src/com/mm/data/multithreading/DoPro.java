@@ -35,7 +35,7 @@ public class DoPro implements Doable<String>{
 		this.bp = bp;
 		this.error = error;
 		Class<IProductModel> clazz = null;
-		
+		bp.setPname(Idata.PRODUCT);
 		pro = new SuperProductModel(selector, sf, bp, error);
 		
 		try {

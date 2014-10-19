@@ -32,7 +32,7 @@ public class MulDown implements Bin {
 			}
 		}
 		if(cmd.indexOf("-r") != -1){
-			rate = cmd.substring(cmd.indexOf("-r")+2);
+			rate = cmd.substring(cmd.indexOf("-r")+2).trim();
 			try {
 				rate = rate.substring(0, rate.indexOf(" "));
 			}catch(Exception e){

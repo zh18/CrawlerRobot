@@ -78,11 +78,12 @@ public class SuperProductModel implements IProductModel{
 						line = selector.getPbase()+getId(e.attr("href"));
 					else 
 						line = e.attr("href");
+					if(line.startsWith("java")) continue;
+					newfile = false;
 					SystemUtil.appendFile(selector.getSavepath()+Idata.uname, line,newfile);
 					if (isType) {
 						SystemUtil.appendFile(selector.getSavepath()+Idata.tname,new Type(typetemp,line).toString(),newfile);
 					}
-					newfile = false;
 				}
 			}while ((url = getNextLink(html,selector.getNbase().equals("#")?"":selector.getNbase(),selector.getNext())) != null);
 		}

@@ -62,7 +62,11 @@ public class Task implements Bin {
 					os.print("Go on the breakpoint ? y or n : ");
 					Core.add(name, scan.nextLine().indexOf("yes") != -1);
 				}
-			} else if (cmd.indexOf("-s") != -1) {
+			} 
+			else if (cmd.indexOf("-sl") != -1) {
+				Core.startAll();
+			}
+			else if (cmd.indexOf("-s") != -1) {
 				Core.start(name);
 			} else if (cmd.indexOf("-a") != -1) {
 				Core.showReady(os);
@@ -75,8 +79,6 @@ public class Task implements Bin {
 					}
 				} else
 					os.println(ReadSelector.getSelector(name.trim()).toString());
-			} else if (cmd.indexOf("-sl") != -1) {
-				Core.startAll();
 			}
 		} else {
 			Core.showList(os);
