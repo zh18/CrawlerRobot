@@ -23,7 +23,7 @@ public class ConnSQL {
 			synchronized (ConnSQL.class) {
 				try {
 					Class.forName("com.mysql.jdbc.Driver");
-					conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/cr",name,pwd);
+					conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/cr?autoReconnect=true",name,pwd);
 				}catch(Exception e){
 					Log.logger.error("db error",e);
 				}

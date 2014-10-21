@@ -30,14 +30,16 @@ public class DoDown implements Doable<String> {
 		String html = spider.spider(t);
 		if(html == null){
 			error.add(t);
-			return;
+			return ;
 		}
 		int rate = Integer.parseInt(bp.getRate());
 		int record = rate/10000;
 		String path = selector.getSavepath()+Idata.hfname+File.separator+((record)*10000+"~"+(record+1)*10000);
 		try {
-			SystemUtil.appendFile(path, Idata.mark+t+Idata.mark+"\n"+html , DoDown.class);
-			bp.setRate(String.valueOf(++rate));
+			synchronized (this) {
+				SystemUtil.appendFile(path, Idata.mark+t+Idata.mark+"\n"+html , DoDown.class);
+				bp.setRate(String.valueOf(++rate));
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}

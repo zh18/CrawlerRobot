@@ -69,6 +69,7 @@ public class ProtectionDao {
 		}
 	}
 	
+	
 	public static void delete(String schemname){
 		Connection conn = ConnSQL.getInstance("root", "root");
 		PreparedStatement prep = null;

@@ -3,6 +3,7 @@ package com.mm.mul.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 import com.mm.mul.Dispatcher;
@@ -24,12 +25,21 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 	private Stack<T> cins = null;
 	private boolean alive = true;
 	private Doable<T> doable = null;
+	private List<Thread> threadlist = null;
+	private Set<T> reset = null;
 	
 	public DispatcherImpl(){
 		cins = new Stack<T>();
 		pots = new ArrayList<Pot<T>>();
+		threadlist = new ArrayList<Thread>();
 	}
 	
+	public DispatcherImpl(Set<T> reset){
+		cins = new Stack<T>();
+		pots = new ArrayList<Pot<T>>();
+		threadlist = new ArrayList<Thread>();
+		this.reset = reset;
+	}
 	
 	public void setDoable(Doable<T> doable){
 		this.doable = doable;
@@ -38,9 +48,12 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 	
 	public boolean addPot(Pot<T> pot) {
 		if(null != pots) {
+			Thread temp = null;
 			if (pots.size() < Dispatcher.MAXPOT) {
 				pots.add(pot);
-				new Thread(pot).start();
+				temp = new Thread(pot);
+				temp.start();
+				threadlist.add(temp);
 				return true;
 			}
 		}
@@ -57,7 +70,6 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 	public boolean cutPot(int id) {
 		if (id == -1 && null != pots && pots.size()>0){
 			pots.get(potSize()-1).setVisiable(false);
-			pots.remove(pots.size()-1);
 		}
 		return false;
 	}
@@ -75,12 +87,21 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 			}
 			dispatcher();
 		}
+		cutAllPots();
+		while(!potsLeaking()){
+			try{
+				Thread.sleep(500);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void dispatcher() {
 		for(Pot<T> p:pots){
 			if(!p.full() && !cins.isEmpty()){
-				p.put(cins.pop());
+				if(p.visiable())
+					p.put(cins.pop());
 			}
 			if(cins.isEmpty()) break;
 		}
@@ -113,6 +134,26 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	public boolean potsLeaking(){
+//		for(Pot<T> p:pots){
+//			if(!p.isEmpty()) {
+//				return false;
+//			}
+//		}
+		for(Thread t:threadlist){
+			if(t.isAlive()){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	protected void cutAllPots(){
+		for(Pot<T> p:pots){
+			p.setVisiable(false);
 		}
 	}
 

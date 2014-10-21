@@ -7,6 +7,7 @@ package com.mm.mul.impl;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
 import com.mm.mul.Doable;
 import com.mm.mul.Pot;
@@ -17,6 +18,7 @@ public class PotImpl<T> implements Pot<T>{
 	private boolean visiable = true;
 	private Doable<T> doable = null;
 	private Queue<T> body = null; 
+	private Set<T> reset = null;
 	
 	public PotImpl(int id,Doable<T> doable){
 		this.id = id;
@@ -24,10 +26,23 @@ public class PotImpl<T> implements Pot<T>{
 		body = new LinkedList<T>();
 	}
 	
+	public PotImpl(int id,Doable<T> doable,Set<T> reset){
+		this.id = id;
+		this.doable = doable;
+		body = new LinkedList<T>();
+		this.reset = reset;
+	}
+	
 	public int getId() {
 		return id;
 	}
 
+	public boolean isEmpty(){
+		if(body!=null){
+			return body.isEmpty();
+		}
+		return true;
+	}
 	
 	public void setVisiable(boolean visiable) {
 		this.visiable = visiable;
@@ -86,8 +101,12 @@ public class PotImpl<T> implements Pot<T>{
 					e.printStackTrace();
 				}
 			}
-			t = get();
+			t = get(); 
 			doable.x(t);
 		}
+	}
+	
+	public boolean visiable(){
+		return visiable;
 	}
 }

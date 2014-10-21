@@ -1,5 +1,7 @@
 package com.mm.data;
 
+import java.util.Set;
+
 import com.mm.data.struct.Selector;
 import com.mm.db.DataBase;
 import com.mm.spider.SpiderFactory;
@@ -27,7 +29,7 @@ public interface Idata {
 			  hfname = "html",
 			  tname = "type.txt",
 			  iname = "info.txt",
-			  ename = "error",
+			  ename = "error.txt",
 			  mark = "ကကက";
 	
 	public BreakPoint getBreakPoint();
@@ -45,5 +47,7 @@ public interface Idata {
 	public void setName(String name);
 	
 	public void setNums(int nums);
+	
+	public void setError(Set<String> error);
 
 }

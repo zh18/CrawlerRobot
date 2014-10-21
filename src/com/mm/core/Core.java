@@ -164,6 +164,10 @@ public final class Core {
 			task.add(new Task(iname,new BreakPoint(iname,pname,rate)));
 	}
 	
+	public final static void addRefresh(String name,String part){
+//		task.add(new Task())
+	}
+	
 	public final static void addMul(String name,String pname,String rate,int nums){
 		String iname = name+"."+pname;
 		if(checkNames(name)){
@@ -185,4 +189,6 @@ public final class Core {
 		}
 		return false;
 	}
+	
+	
 }

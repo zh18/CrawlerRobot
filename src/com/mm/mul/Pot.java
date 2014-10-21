@@ -28,4 +28,8 @@ public interface Pot<T> extends Runnable{
 	public boolean full();
 	
 	public void leak(Doable<T> doable);
+	
+	public boolean isEmpty();
+	
+	public boolean visiable();
 }

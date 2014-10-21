@@ -2,6 +2,7 @@ package com.mm.data.model;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -14,15 +15,15 @@ import org.jsoup.select.Elements;
 import com.mm.data.Idata;
 import com.mm.data.struct.Selector;
 import com.mm.data.struct.Type;
+import com.mm.mul.Doable;
 import com.mm.spider.ISpider;
 import com.mm.spider.SpiderFactory;
 import com.mm.spider.SpiderFactoryImpl;
 import com.mm.stop.BreakPoint;
 import com.mm.util.SystemUtil;
 
-public class SuperProductModel implements IProductModel{
+public class SuperModel extends SpiderFactoryImpl implements IFirstModel,IProductModel{
 
-	private SpiderFactory sf = null;
 	private Selector selector;
 	private BreakPoint breakpoint;
 	private Document doc;
@@ -31,24 +32,15 @@ public class SuperProductModel implements IProductModel{
 	private String html,line;
 	private ISpider spider = null;
 	
-	public SuperProductModel(){
-		
+	public ISpider getSpider(String url){
+		return super.getSpider();
 	}
-	
-	public SuperProductModel(Selector selector,SpiderFactory sf,BreakPoint breakpoint,Set<String> error){
-		this.selector = selector;
-		this.sf = sf;
-		spider = sf.getSpider();
-		this.breakpoint = breakpoint;
-		this.error = error;
-	}
+
+	public SuperModel(){}
 	
 	public void init(Selector selector,BreakPoint breakpoint,Set<String> error){
-		if(sf == null) {
-			sf = new SpiderFactoryImpl();
-			spider = sf.getSpider();
-		}
 		this.selector = selector;
+		spider = this.getSpider();
 		this.breakpoint = breakpoint;
 		this.error = error;
 	}
@@ -67,7 +59,7 @@ public class SuperProductModel implements IProductModel{
 			url = urls.get(i);
 			breakpoint.setTotla(urls.size());
 			breakpoint.recover(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()).toString(), 
-					breakpoint.getWname(), Idata.PRODUCT, String.valueOf(i));
+					breakpoint.getWname(), Idata.DOWNLOAD, String.valueOf(i));
 			do {
 				try {
 					html = spider.spider(url);
@@ -103,6 +95,50 @@ public class SuperProductModel implements IProductModel{
 		}
 		SystemUtil.appendFile(selector.getSavepath()+Idata.ename, error);
 	}
+
+	public Set<String> first0() {
+		breakpoint.setPname(Idata.FIRST);
+		
+		List<String> temp2 = new ArrayList<String>(); // 把根网页中 含有selects的信息提哪家到需要爬取的网页中
+		List<List<String>> temp = new ArrayList<List<String>>(); // 获取循环爬取的网页
+		temp.add(selector.getRootpath());
+		List<String> add = new ArrayList<String>();
+		for (int i = 0; i < selector.getFselects().length; i++) {   
+			// 当有第一级为根节点时，加入add列表中，再第二级加入爬取下一级子节点，如果不存再，则继续加入下一节点
+			temp2 = new ArrayList<String>();
+			breakpoint.setTotla(selector.getFselects().length);
+			for (String url : temp.get(i)) {
+				// i use this to stop this thread
+				breakpoint.recover(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()).toString(), 
+						breakpoint.getWname(), Idata.FIRST, String.valueOf(i));
+				
+				html = spider.spider(url);
+				if (html == null) {
+					continue;
+				}
+				doc = Jsoup.parse(html);
+				elist = doc.select(selector.getFselects()[i]);
+				if (elist.size() == 0) {
+					add.add("first"+url);
+					continue;
+				} else {
+					for (Element e : elist) {
+						if (!selector.getFbase().equals("#")) 
+							line = selector.getFbase()+e.attr("href");
+						else
+							line = e.attr("href");
+						temp2.add(line);
+					}
+				}
+			}
+			temp2.addAll(add);
+			if (temp2.size() != 0) {
+				temp.add(temp2);
+				add = new ArrayList<String>();
+			}
+		}
+		return (Set<String>)SystemUtil.readCollectionFromCollection(temp.get(temp.size()-1),Set.class);
+	}
 	
 	protected final boolean isTypes(){
 		return !selector.getClassify().equals("#");
@@ -135,4 +171,5 @@ public class SuperProductModel implements IProductModel{
 		if ("".equals(nextlink)) return null;
 		return basepath+nextlink;
 	}
+	
 }

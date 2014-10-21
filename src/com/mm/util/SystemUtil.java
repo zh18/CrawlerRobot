@@ -34,7 +34,7 @@ import com.mm.logger.Log;
 public class SystemUtil {
 	
 	public static synchronized long getLineOfFile(String path) throws IOException {
-		long num = mulGetLineOfFile(path, 2);
+		long num = mulGetLineOfFile(path, 5);
 		return num;
 	}
 	
@@ -302,7 +302,6 @@ public class SystemUtil {
 		return sb.toString();
 	}
 	
-	
 	public static synchronized boolean merge(String src,String dest) throws IOException{
 		File [] srcf=null, destf=null;
 		if(!(new File(src).isDirectory() && new File(dest).isDirectory())) return false; 
@@ -400,6 +399,72 @@ public class SystemUtil {
 		return t;
 	}
 	
+	public static Collection<String> readCollectionFromFile(String path,Class clazz) throws IOException {
+		Collection<String> result = clazz.equals(Set.class)?new HashSet<String>():new ArrayList<String>();
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		String line = null;
+		while((line = br.readLine()) != null){
+			result.add(line);
+		}
+		br.close();
+		if (result.isEmpty())
+			return null;
+		return result;
+	}
+	
+	public static Collection<String> readCollectionFromCollection(Collection<String> col) {
+		Collection<String> result = col instanceof Set?new ArrayList<String>():new HashSet<String>();
+		for(Iterator<String> it=col.iterator();it.hasNext();){
+			result.add(it.next());
+		}
+		if (result.isEmpty()) return null;
+		return result;
+	}
+	
+	public static Collection<String> readCollectionFromCollection(Collection<String> col,Class clazz){
+		Collection<String> result = clazz.equals(Set.class)?new HashSet<String>():new ArrayList<String>();
+		Iterator<String> it = col.iterator();
+		while(it.hasNext()){
+			result.add(it.next());
+		}
+		return result;
+	}
+	
+	public static void writeCollectionToFile(String path,Collection<String> col) throws IOException {
+		BufferedWriter bw = new BufferedWriter(new FileWriter(path));
+		for(String s:col){
+			bw.write(s+"\n");
+		}
+		bw.close();
+	}
+	
+	public static void replaceFileLine(String path,String regex,String replace) throws IOException {
+		List<String> temp = (List<String>)readCollectionFromFile(path, List.class);
+		for(int i=0;i<temp.size();i++){
+			temp.set(i, temp.get(i).replaceAll(regex, replace));
+		}
+		writeCollectionToFile(path, temp);
+	}
+	
+	public static void copyFile(String src,String des) throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(new FileInputStream(src));
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(des));
+		byte [] buffer = new byte[4096];
+		int length = 0;
+		while((length = bis.read(buffer)) != -1){
+			bos.write(buffer, 0, length);
+		}
+		bos.close();
+		bis.close();
+	}
+	
+	public static void appendToFile(String path,String line) throws IOException {
+		RandomAccessFile raf = new RandomAccessFile(path, "rw");
+		raf.seek(raf.length());
+		raf.write((line+"\n").getBytes());
+		raf.close();
+	}
+	
 	public static boolean  iteratorDelete(Object o,Object target) {
 		boolean result = false;
 		if(!(o instanceof Iterable)) return result;
@@ -414,4 +479,9 @@ public class SystemUtil {
 		}
 		return result;
 	}
+
+	public static void main(String[] args) {
+		
+	}
+
 }

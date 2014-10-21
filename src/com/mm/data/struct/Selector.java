@@ -37,6 +37,7 @@ public class Selector {
 	private String type;
 	private String murl;
 	
+	private String rft;
 	
 	
 	public Selector(String name, List<String> rootpath, String[] fselects,
@@ -282,8 +283,18 @@ public class Selector {
 	}
 
 
+	public static String getClassName(String name){
+		String temp = name;
+		if(temp.indexOf("_") != -1) {
+			try {
+				temp = temp.substring(0, temp.indexOf("_")).trim();
+			}catch(Exception e){
+				return null;
+			}
+		}
+		return temp.trim();
+	}
 	
-
 
 
 	public Selector(String name, String [] rootpath, String[] fselects,
@@ -395,6 +406,24 @@ public class Selector {
 
 	public void setMurl(String murl) {
 		this.murl = murl;
+	}
+
+
+	
+
+
+
+	public String getRft() {
+		return rft;
+	}
+
+
+
+
+
+
+	public void setRft(String rft) {
+		this.rft = rft;
 	}
 
 

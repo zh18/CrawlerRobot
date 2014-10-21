@@ -92,6 +92,13 @@ public class ReadSelector {
 		return "";
 	}
 	
+	public static boolean isIn(String name){
+		for(String s:getAllNames()){
+			if(s.equals(name.trim())) return true;
+		}
+		return false;
+	}
+	
 	public static void main(String[] args) {
 		for(String s:getAllNames()){
 			System.out.println(s);

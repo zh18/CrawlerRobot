@@ -1,9 +1,10 @@
 package com.mm.db;
 
+import java.util.List;
+
 import com.mm.db.dao.ProtectionDao;
 import com.mm.db.dao.SysDao;
 import com.mm.db.dao.UserDao;
-
 import com.mm.stop.BreakPoint;
 
 public class DataBase {
@@ -20,6 +21,10 @@ public class DataBase {
 	
 	public static BreakPoint getProtection(String name){
 		return ProtectionDao.readBreak(name);
+	}
+	
+	public static List<BreakPoint> seeAll(){
+		return ProtectionDao.seeAll();
 	}
 	
 	public static void deleteProtection(String name){

@@ -43,6 +43,7 @@ public class SuperData implements Idata{
 	protected int rate;
 	
 	
+	
 	public SuperData(){
 		name = this.getClass().getName();
 		rate = 0;
@@ -253,7 +254,7 @@ public class SuperData implements Idata{
 			// ### url ### 在前的方式
 			bw.write("\n"+mark+url+mark+"\n");
 			bw.write(html);
-			if (current!= 0 && current%10000 == 0)   {  //每一万个变成一个新文件
+			if (record!= 0 && record%10000 == 0)   {  //每一万个变成一个新文件
 				file = new File(selector.getSavepath()+hfname+File.separator+((++record)*10000+"~"+(record+1)*10000));
 				bw.close();
 				bw = new BufferedWriter(new FileWriter(file));
@@ -315,6 +316,10 @@ public class SuperData implements Idata{
 	}
 	
 	public void setNums(int nums){
+		
+	}
+	
+	public void setError(Set<String> error){
 		
 	}
 }

@@ -66,11 +66,12 @@ public class MulData implements Idata {
 		String line = null;
 		
 		int skip = 0;
+		//从文件中获取要工作的序列
 		while((line = br.readLine()) != null){
 			if(breakpoint.getRate().trim().equals("")) {
 				breakpoint.setRate("0");
 			}
-			if(skip++ < Integer.parseInt(breakpoint.getRate())) continue;
+			if(++skip < Integer.parseInt(breakpoint.getRate())) continue;
 			if(dispatcher.full()){
 				try {
 					Thread.sleep(50);
@@ -84,6 +85,13 @@ public class MulData implements Idata {
 		br.close();
 		dispatcher.live(false);
 		dis.join();
+		//  为product去重
+//		if(doable instanceof DoPro) {
+//			synchronized (line) {
+//				SystemUtil.writeColl(SystemUtil.readCollectionFromFile(selector.getSavepath()+uname, Set.class), selector.getSavepath()+uname);			
+//			}
+//		}
+		SystemUtil.writeColl(error, selector.getSavepath()+ename);
 	}
 
 	public void setFactory(SpiderFactory factory) {
@@ -122,5 +130,9 @@ public class MulData implements Idata {
 			this.nums = nums;
 		}
 		else this.nums = 5;
+	}
+	
+	public void setError(Set<String> error){
+		
 	}
 }

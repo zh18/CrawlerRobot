@@ -9,15 +9,16 @@ import com.mm.data.Idata;
 import com.mm.data.model.IProductModel;
 import com.mm.data.model.SuperProductModel;
 import com.mm.data.struct.Selector;
+import com.mm.logger.Log;
 import com.mm.mul.Doable;
 import com.mm.spider.ISpider;
 import com.mm.spider.SpiderFactory;
 import com.mm.stop.BreakPoint;
+import com.mm.util.SYS;
 import com.mm.util.SystemUtil;
 
 public class DoPro implements Doable<String>{
 
-	private ISpider spider = null;
 	private Selector selector = null;
 	private BreakPoint bp = null;
 	private Set<String> error = null;
@@ -30,7 +31,6 @@ public class DoPro implements Doable<String>{
 	protected IProductModel pro = null;
 	
 	public DoPro(Selector selector,BreakPoint bp,SpiderFactory sf,Set<String> error){
-		spider = sf.getSpider();
 		this.selector = selector;
 		this.bp = bp;
 		this.error = error;
@@ -45,6 +45,22 @@ public class DoPro implements Doable<String>{
 		}
 	}
 	
+	public DoPro(Selector selector,BreakPoint bp,Set<String> error){
+		this.selector = selector;
+		this.bp = bp;
+		this.error = error;
+		Class<IProductModel> clazz = null;
+		bp.setPname(Idata.PRODUCT);
+		
+		try {
+			clazz = (Class<IProductModel>) Class.forName(SYS.SYS_MODEL+"."+Selector.getClassName(selector.getName()));
+			pro = clazz.newInstance(); 
+			pro.init(selector,bp,error);
+		}catch(Exception e){
+			Log.logger.error("load model - error", e);
+		}
+	}
+	
 	public void x(String t){
 		if(null == bp || null == pro || null == bp.getRate()) {
 			System.out.println("null bp");
@@ -52,11 +68,14 @@ public class DoPro implements Doable<String>{
 		}
 		int rate = Integer.parseInt(bp.getRate());
 		try {
-			pro.getPro0(t);
+			synchronized (t) {
+				pro.getPro0(t);
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		bp.setRate(String.valueOf(rate++));
+		bp.setPname(Idata.PRODUCT);
+		bp.setRate(String.valueOf(++rate));
 	}
 
 	public IProductModel getPro() {
