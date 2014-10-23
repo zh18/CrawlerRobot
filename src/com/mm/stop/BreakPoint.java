@@ -102,4 +102,9 @@ public class BreakPoint {
 		this.total = total;
 	}
 	
+	public synchronized void incRate(){
+		int temp = Integer.parseInt(rate);
+		rate = String.valueOf(++temp);
+	}
+	
 }

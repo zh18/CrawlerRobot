@@ -14,5 +14,5 @@ public interface SYS {
 	public String SYS_BIN = "com.mm.server.bins";
 	public String SYS_BIN_FLODER="com"+File.separator+"mm"+File.separator+"server"+File.separator+"bins";
 	public String PATH = DataBase.getString("syspath");
-//	public String PATH = "/root/pu";
+//	public String PATH = "/root/program/program/CrawlerRobot/bin/";
 }

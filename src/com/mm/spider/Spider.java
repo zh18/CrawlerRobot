@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.mm.logger.Log;
 import com.mm.util.SystemUtil;
 import com.sun.swing.internal.plaf.synth.resources.synth;
 
@@ -54,9 +55,10 @@ public class Spider implements ISpider {
 				if(keyname == null) return null;
 				Iterator<String> it = map.get(keyname).iterator();
 				StringBuffer sbu = new StringBuffer();  
-			    sbu.append("eos_style_cookie=default; ");  
-			    while(it.hasNext()){  
-			        sbu.append(it.next());  
+			    sbu.append("eos_style_cookie=default; ");			    
+			    while(it.hasNext()){
+			    	
+			        sbu.append(it.next()); 
 			    }
 			    return sbu.toString();
 			}
@@ -80,6 +82,7 @@ public class Spider implements ISpider {
 			conn.setRequestProperty("Cache-Control", "no-cache");
 			// conn.setRequestProperty("Connection", "keep-alive");
 			// conn.setRequestProperty("Cookie", cookie);
+//			cookie = getCookie(url);
 			if(cookie != null){
 				conn.setRequestProperty("Cookie", cookie);
 			}
@@ -96,34 +99,29 @@ public class Spider implements ISpider {
 				charset = "gbk";
 			else
 				charset = charset.substring(charset.indexOf('=') + 1).trim();
-			Scanner in = new Scanner(conn.getInputStream(), charset);
+			Scanner in = new Scanner(conn.getInputStream(), charset.toLowerCase());
+			String temp = null;
 			while (in.hasNextLine()) {
-				content.append(in.nextLine() + "\n");
+				content.append((temp = in.nextLine()) + "\n");
+				if(temp.indexOf("Robot Check") != -1) return null;
 			}
 			in.close();
 			conn.disconnect();
 		} catch (IOException e) {
-			// 添加日志处理内容
+			return null;
 		}
 		return content.toString();
 	}
 
-	public String spider(String url) {
-		String content = spider(null, url);
-		if(null != content) return content;
-		try {
-			int i = 0;
-			while (content != null) {
+	public synchronized String spider(String url) {
+		String content = null;
+		while (content == null) {
+			try {
 				content = spider(null, url);
-				i++;
-				if (content != null)
-					return content;
-				if (i > REMAX)
-					return null;
+			}catch(Exception e){
 			}
-		} catch (Exception e) {
 		}
-		return null;
+		return content;
 	}
 
 	public String spider(String url, int retries) {
@@ -160,6 +158,6 @@ public class Spider implements ISpider {
 		SystemUtil
 				.write("/home/public/Desktop/test.html",
 						(new Spider()
-								.spider("http://www.amazon.com/s/ref=lp_27_nr_n_13/177-4014461-6913731?rh=n%3A283155%2Cn%3A!1000%2Cn%3A27%2Cn%3A17148&bbn=27&ie=UTF8&qid=1413428086&rnid=27")));
+								.spider("http://www.amazon.cn/s/ref=sr_nr_n_0/477-2323808-0521745?rh=n%3A2127215051%2Cn%3A!2127216051%2Cn%3A43234071%2Cn%3A43236071%2Cn%3A43237071&bbn=43236071&ie=UTF8&qid=1414037678&rnid=43236071")));
 	}
 }

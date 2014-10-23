@@ -13,10 +13,13 @@ import com.mm.util.SystemUtil;
 
 public class StartServer {
 
-//	private final static int PORT = 9998;
+//	private final static int PORT = 10000;
+	private final static int PORT = 9998;
 //	private final static int PORT = 8888;
 //	private final static int PORT = 7777;
-	private final static int PORT = 6666;
+//	private final static int PORT = 6666;
+//	private final static int PORT = 11111;
+//	private final static int PORT = 12005;
 	private static ServerSocket ss = null;
 	private static Socket s = null;
 	public static long times = 0L;
@@ -88,7 +91,7 @@ public class StartServer {
 	public static void main(String[] args) {
 		times = System.currentTimeMillis();
 		//开启守护进程
-		refreshThread();
+//		refreshThread();
 		reboot();
 	}
 	

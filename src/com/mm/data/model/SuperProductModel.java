@@ -55,6 +55,7 @@ public class SuperProductModel implements IProductModel{
 	
 	public void getPro0(String url) throws IOException {
 		boolean isType = isTypes();
+		String original = url;
 		String typetemp = "";
 		error.clear();
 		List<String> urls = SystemUtil.readLine(selector.getSavepath()+Idata.fname);
@@ -79,9 +80,13 @@ public class SuperProductModel implements IProductModel{
 					error.add("product:"+url);
 					continue;
 				}
-				doc = Jsoup.parse(html);
+				try {
+					doc = Jsoup.parse(html);
+				}catch(Exception e){
+					error.add("prodcut:"+url);
+					continue;
+				}
 				elist = doc.select(selector.getProducts());
-				
 				if(isType){
 					typetemp = getType(doc, isType);
 				}
@@ -95,6 +100,7 @@ public class SuperProductModel implements IProductModel{
 					if(line.startsWith("java")) continue;
 					newfile = false;
 					SystemUtil.appendFile(selector.getSavepath()+Idata.uname, line,newfile);
+					SystemUtil.appendFile(selector.getSavepath()+"url-first.txt",line+"  #  "+original, newfile);
 					if (isType) {
 						SystemUtil.appendFile(selector.getSavepath()+Idata.tname,new Type(typetemp,line).toString(),newfile);
 					}
@@ -109,7 +115,7 @@ public class SuperProductModel implements IProductModel{
 	}
 	
 	protected String getId(String url){
-		return "";
+		return ""+url;
 	}
 	
 	protected String getType(Document doc,boolean isType){

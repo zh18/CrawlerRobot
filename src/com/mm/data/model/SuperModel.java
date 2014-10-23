@@ -21,6 +21,7 @@ import com.mm.spider.SpiderFactory;
 import com.mm.spider.SpiderFactoryImpl;
 import com.mm.stop.BreakPoint;
 import com.mm.util.SystemUtil;
+import com.sun.swing.internal.plaf.synth.resources.synth;
 
 public class SuperModel extends SpiderFactoryImpl implements IFirstModel,IProductModel{
 
@@ -45,8 +46,9 @@ public class SuperModel extends SpiderFactoryImpl implements IFirstModel,IProduc
 		this.error = error;
 	}
 	
-	public void getPro0(String url) throws IOException {
+	public synchronized void getPro0(String url) throws IOException {
 		boolean isType = isTypes();
+		String original = url;
 		String typetemp = "";
 		error.clear();
 		List<String> urls = SystemUtil.readLine(selector.getSavepath()+Idata.fname);
@@ -87,6 +89,7 @@ public class SuperModel extends SpiderFactoryImpl implements IFirstModel,IProduc
 					if(line.startsWith("java")) continue;
 					newfile = false;
 					SystemUtil.appendFile(selector.getSavepath()+Idata.uname, line,newfile);
+					SystemUtil.appendFile(selector.getSavepath()+"url-first.txt",line+"  #  "+original, newfile);
 					if (isType) {
 						SystemUtil.appendFile(selector.getSavepath()+Idata.tname,new Type(typetemp,line).toString(),newfile);
 					}
@@ -145,7 +148,7 @@ public class SuperModel extends SpiderFactoryImpl implements IFirstModel,IProduc
 	}
 	
 	protected String getId(String url){
-		return "";
+		return ""+url;
 	}
 	
 	protected String getType(Document doc,boolean isType){
@@ -164,7 +167,12 @@ public class SuperModel extends SpiderFactoryImpl implements IFirstModel,IProduc
 	}
 	
 	protected String getNextLink(String html,String basepath,String cssQuery) {
-		doc = Jsoup.parse(html);
+		try {
+			doc = Jsoup.parse(html);
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 		elist = doc.select(cssQuery);
 		
 		String nextlink = elist.attr("href");

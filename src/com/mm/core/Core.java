@@ -183,7 +183,7 @@ public final class Core {
 		}catch(Exception e){
 		}
 		for(String s:temp){
-			if(s.equals(name.trim())){
+			if(s.trim().equals(name.trim())){
 				return true;
 			}
 		}

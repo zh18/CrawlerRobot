@@ -27,11 +27,11 @@ public class MulData implements Idata {
 	Doable<String> doable = null;
 	Dispatcher<String> dispatcher = new DispatcherImpl<String>();
 	private int nums = 5;
-	
-	public MulData(){
+
+	public MulData() {
 		error = new HashSet<String>();
 	}
-	
+
 	public BreakPoint getBreakPoint() {
 		return breakpoint;
 	}
@@ -41,57 +41,54 @@ public class MulData implements Idata {
 	}
 
 	public void data() throws Exception {
-		if(!check(breakpoint.getPname())) {
-			System.out.println("there is no "+breakpoint.getPname()+" file");
-			return ;
+		if (!check(breakpoint.getPname())) {
+			System.out
+					.println("there is no " + breakpoint.getPname() + " file");
+			return;
 		}
 		Thread dis = new Thread(dispatcher);
-		breakpoint.setTotla(SystemUtil.getLineOfFile(selector.getSavepath()+uname));
-		if(breakpoint.getRate().trim().equals("")){
+		breakpoint.setTotla(SystemUtil.getLineOfFile(selector.getSavepath()
+				+ uname));
+		if (breakpoint.getRate().trim().equals("")) {
 			breakpoint.setRate("0");
 		}
 		BufferedReader br = null;
-		if(breakpoint.getPname().equals(Idata.PRODUCT)) {
-		    doable = new DoPro(selector, breakpoint, sf, error);
-		    br = new BufferedReader(new FileReader(selector.getSavepath()+fname));
-		}
-		else if (breakpoint.getPname().equals(Idata.DOWNLOAD)) {
+		if (breakpoint.getPname().equals(Idata.PRODUCT)) {
+			doable = new DoPro(selector, breakpoint, sf, error);
+			br = new BufferedReader(new FileReader(selector.getSavepath()
+					+ fname));
+		} else if (breakpoint.getPname().equals(Idata.DOWNLOAD)) {
 			doable = new DoDown(selector, breakpoint, sf, error);
-		    br = new BufferedReader(new FileReader(selector.getSavepath()+uname));
+			br = new BufferedReader(new FileReader(selector.getSavepath()
+					+ uname));
 		}
-		for(int i=0;i<nums;i++){
+		for (int i = 0; i < nums; i++) {
 			dispatcher.addPot(new PotImpl<String>(i, doable));
 		}
 		dis.start();
 		String line = null;
-		
+
 		int skip = 0;
-		//从文件中获取要工作的序列
-		while((line = br.readLine()) != null){
-			if(breakpoint.getRate().trim().equals("")) {
+		// 从文件中获取要工作的序列
+		while ((line = br.readLine()) != null) {
+			if (breakpoint.getRate().trim().equals("")) {
 				breakpoint.setRate("0");
 			}
-			if(++skip < Integer.parseInt(breakpoint.getRate())) continue;
-			if(dispatcher.full()){
+			if (++skip < Integer.parseInt(breakpoint.getRate()))
+				continue;
+			if (dispatcher.full()) {
 				try {
 					Thread.sleep(50);
-				}catch(Exception e){
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
-			else
+			} else
 				dispatcher.cin(line);
 		}
 		br.close();
 		dispatcher.live(false);
 		dis.join();
-		//  为product去重
-//		if(doable instanceof DoPro) {
-//			synchronized (line) {
-//				SystemUtil.writeColl(SystemUtil.readCollectionFromFile(selector.getSavepath()+uname, Set.class), selector.getSavepath()+uname);			
-//			}
-//		}
-		SystemUtil.writeColl(error, selector.getSavepath()+ename);
+		SystemUtil.writeColl(error, selector.getSavepath() + ename);
 	}
 
 	public void setFactory(SpiderFactory factory) {
@@ -110,29 +107,29 @@ public class MulData implements Idata {
 		this.name = name;
 	}
 
-	public  boolean check(String part){
-		if(part.equals(PRODUCT))
-			return check0(selector.getSavepath()+fname);
-		else if(part.equals(DOWNLOAD))
-			return check0(selector.getSavepath()+uname);
+	public boolean check(String part) {
+		if (part.equals(PRODUCT))
+			return check0(selector.getSavepath() + fname);
+		else if (part.equals(DOWNLOAD))
+			return check0(selector.getSavepath() + uname);
 		return false;
 	}
-	
-	private boolean check0(String name){
+
+	private boolean check0(String name) {
 		File file = new File(name);
 		if (file.exists())
 			return true;
 		return false;
 	}
-	
-	public void setNums(int nums){
-		if(nums>0){
+
+	public void setNums(int nums) {
+		if (nums > 0) {
 			this.nums = nums;
-		}
-		else this.nums = 5;
+		} else
+			this.nums = 5;
 	}
-	
-	public void setError(Set<String> error){
-		
+
+	public void setError(Set<String> error) {
+
 	}
 }

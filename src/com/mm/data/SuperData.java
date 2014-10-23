@@ -124,6 +124,7 @@ public class SuperData implements Idata{
 							line = selector.getFbase()+e.attr("href");
 						else
 							line = e.attr("href");
+//						System.out.println(line);
 						temp2.add(line);
 					}
 				}

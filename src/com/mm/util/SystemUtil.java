@@ -170,14 +170,14 @@ public class SystemUtil {
 	}
 	
 	
-	public static void appendFile(String path,String line,Object lock) throws IOException{
+	public static synchronized void appendFile(String path,String line,Object lock) throws IOException{
 		RandomAccessFile raf = new RandomAccessFile(path, "rw");
 		raf.seek(raf.length());
 		raf.write((line+"\n").getBytes());
 		raf.close();
 	}
 	
-	public static void appendFile(String path,Collection<String> col,Object lock) throws IOException {
+	public static synchronized void appendFile(String path,Collection<String> col,Object lock) throws IOException {
 		RandomAccessFile raf = new RandomAccessFile(path,"rw");
 		raf.seek(raf.length());
 		for(String s:col){

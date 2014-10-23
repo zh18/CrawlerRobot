@@ -11,6 +11,7 @@ import java.util.Set;
 
 import com.mm.mul.Doable;
 import com.mm.mul.Pot;
+import com.sun.swing.internal.plaf.synth.resources.synth;
 
 public class PotImpl<T> implements Pot<T>{
 
@@ -61,7 +62,7 @@ public class PotImpl<T> implements Pot<T>{
 	
 	public void put(T t) {
 		if(visiable && null != body) {
-			body.add(t);
+			addEle(t);
 			synchronized (this) {
 				try {
 					this.notify();
@@ -75,7 +76,7 @@ public class PotImpl<T> implements Pot<T>{
 	public T get() {
 		T result = null;
 		if(!body.isEmpty())
-			result = body.poll();
+			result = getEle();
 		return result;
 	}
 
@@ -104,6 +105,14 @@ public class PotImpl<T> implements Pot<T>{
 			t = get(); 
 			doable.x(t);
 		}
+	}
+	
+	public synchronized void addEle(T t){
+		body.add(t);
+	}
+	
+	public synchronized T getEle(){
+		return body.poll();
 	}
 	
 	public boolean visiable(){

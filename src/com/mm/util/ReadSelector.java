@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mm.data.struct.Selector;
+import com.sun.swing.internal.plaf.synth.resources.synth;
 
 public class ReadSelector {
 	
@@ -15,7 +16,7 @@ public class ReadSelector {
 	 * name like DD_ghhz
 	 * @param name
 	 */
-	public static Selector getSelector(String name){
+	public synchronized static Selector getSelector(String name){
 		String sname = name.substring(0, name.indexOf("_"));
 		String subname = null;
 		try {
