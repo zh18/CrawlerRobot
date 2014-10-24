@@ -15,7 +15,10 @@ public interface Idata {
 				  CLASS = "classify",
 				  BRAND = "brand",
 				  INFO = "info",
-				  DONE = "done";
+				  DONE = "done",
+				  ONLY_FIRST="only_first",
+				  ONLY_PRODUCT="only_product",
+				  ONLY_DOWNLOAD="only_download";
 	
 //	public final static String fname = DataBase.getString("fname"),
 //			  uname = DataBase.getString("uname"),

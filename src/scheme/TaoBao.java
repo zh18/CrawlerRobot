@@ -55,7 +55,7 @@ public class TaoBao extends SuperData{
 			total = getTotal(json);
 			brandtemp = getClassify(json);
 			
-			for(int page=0;page<total && page<10;page++){
+			for(int page=0;page<total;page++){
 				json = spider.spider(url);
 				for(String s:listpros(json)){
 					SystemUtil.appendFile(selector.getSavepath()+uname, s, newfile);

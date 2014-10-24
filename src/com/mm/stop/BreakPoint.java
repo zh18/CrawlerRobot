@@ -1,5 +1,8 @@
 package com.mm.stop;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class BreakPoint {
 	
 	private String breakreason;
@@ -10,6 +13,7 @@ public class BreakPoint {
 	private String done;   /* 0 is done , 1 have not */
 	private transient long total;
 	private transient boolean newfile = true;
+	private transient SimpleDateFormat sdf = null;
 	
 	public BreakPoint(){
 	}
@@ -35,6 +39,12 @@ public class BreakPoint {
 		this.wname = wname;
 		this.pname = pname;
 		this.rate = rate;
+	}
+	
+	public void recover(String time, String wname,String pname) {
+		this.time = time;
+		this.wname = wname;
+		this.pname = pname;
 	}
 	
 	public String getBreakreason() {
@@ -105,6 +115,12 @@ public class BreakPoint {
 	public synchronized void incRate(){
 		int temp = Integer.parseInt(rate);
 		rate = String.valueOf(++temp);
+	}
+	public void refreshTime(){
+		if(sdf == null){
+			sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		}
+		time = sdf.format(new Date()).toString();
 	}
 	
 }

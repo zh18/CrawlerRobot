@@ -28,6 +28,8 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 	private List<Thread> threadlist = null;
 	private Set<T> reset = null;
 	
+	private int currentpot = 0;
+	
 	public DispatcherImpl(){
 		cins = new Stack<T>();
 		pots = new ArrayList<Pot<T>>();
@@ -45,6 +47,10 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 		this.doable = doable;
 	}
 	
+	public synchronized T getCin(){
+		if(cins.isEmpty()) return null;
+		return cins.pop();
+	}
 	
 	public boolean addPot(Pot<T> pot) {
 		if(null != pots) {
@@ -97,17 +103,31 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 		}
 	}
 	
-	public void dispatcher() {
-		for(Pot<T> p:pots){
-			if(!p.full() && !cins.isEmpty()){
-				if(p.visiable())
-					p.put(cins.pop());
-			}
-			if(cins.isEmpty()) break;
-		}
-	}
+//	public void dispatcher() {
+//		for(Pot<T> p:pots){
+//			if(!p.full() && !cins.isEmpty()){
+//				if(p.visiable())
+//					p.put(cins.pop());
+//			}
+//			if(cins.isEmpty()) break;
+//		}
+//	}
 
-	public  void cin(T t) {
+	/*
+	 * 使每个pots的任务平均化
+	 * @see com.mm.mul.Dispatcher#cin(java.lang.Object)
+	 */
+	public void dispatcher(){
+		Pot<T> temp = pots.get(currentpot%pots.size());
+		if(null != temp && temp.visiable() && !temp.full() && !pots.isEmpty()) {
+			temp.put(getCin());
+		}
+		if(currentpot >= Integer.MAX_VALUE) currentpot = 0;
+		else
+			currentpot ++;
+	}
+	
+	public void cin(T t) {
 		if(null != cins){
 			synchronized (cins) {
 				cins.add(t);
@@ -138,11 +158,6 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 	}
 	
 	public boolean potsLeaking(){
-//		for(Pot<T> p:pots){
-//			if(!p.isEmpty()) {
-//				return false;
-//			}
-//		}
 		for(Thread t:threadlist){
 			if(t.isAlive()){
 				return false;

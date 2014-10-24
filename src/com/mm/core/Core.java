@@ -78,6 +78,11 @@ public final class Core {
 		return true;
 	}
 	
+	public final static void removeAll(){
+		allthread.clear();
+		task.clear();
+	}
+	
 	public final static boolean stopThread(String id){
 		Task task = getTask(id);
 		if (null == task) return false;

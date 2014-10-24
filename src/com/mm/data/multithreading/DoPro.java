@@ -1,5 +1,7 @@
 package com.mm.data.multithreading;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 import org.jsoup.nodes.Document;
@@ -14,6 +16,7 @@ import com.mm.mul.Doable;
 import com.mm.spider.ISpider;
 import com.mm.spider.SpiderFactory;
 import com.mm.stop.BreakPoint;
+import com.mm.util.FileC;
 import com.mm.util.SYS;
 import com.mm.util.SystemUtil;
 
@@ -25,6 +28,7 @@ public class DoPro implements Doable<String> {
 	protected Document doc = null;
 	protected Elements elist = null;
 	protected String html, line;
+	private FileC wUname,wUFname;
 	/*
 	 * 自动通过反射加载
 	 */
@@ -35,32 +39,19 @@ public class DoPro implements Doable<String> {
 		this.selector = selector;
 		this.bp = bp;
 		this.error = error;
-		Class<IProductModel> clazz = null;
 		bp.setPname(Idata.PRODUCT);
 		pro = new SuperProductModel(selector, sf, bp, error);
-
-		try {
-			// clazz = Class.forName(className);
-		} catch (Exception e) {
-
-		}
 	}
-
-	public DoPro(Selector selector, BreakPoint bp, Set<String> error) {
+	
+	public DoPro(Selector selector, BreakPoint bp,SpiderFactory sf,
+			Set<String> error,FileC wUname,FileC wUFname) {
 		this.selector = selector;
 		this.bp = bp;
 		this.error = error;
-		Class<IProductModel> clazz = null;
 		bp.setPname(Idata.PRODUCT);
-
-		try {
-			clazz = (Class<IProductModel>) Class.forName(SYS.SYS_MODEL + "."
-					+ Selector.getClassName(selector.getName()));
-			pro = clazz.newInstance();
-			pro.init(selector, bp, error);
-		} catch (Exception e) {
-			Log.logger.error("load model - error", e);
-		}
+		this.wUname = wUname;
+		this.wUFname = wUFname;
+		pro = new SuperProductModel(selector, sf, bp, error,wUname,wUFname);
 	}
 
 	public void x(String t) {
@@ -71,6 +62,7 @@ public class DoPro implements Doable<String> {
 		try {
 			pro.getPro0(t);
 			bp.setPname(Idata.PRODUCT);
+			bp.refreshTime();
 			synchronized (bp) {
 				bp.incRate();
 			}

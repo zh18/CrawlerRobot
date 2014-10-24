@@ -157,10 +157,10 @@ public final class Task implements Runnable {
 		try {
 			running = RUNNING;
 			data.data();
-			running = STOP;
+			running = Idata.DONE;
 		}catch(Exception e){
 			running = STOP;
-			Protection.save(data, "Oops");
+			Protection.save(data, "Oops "+e);
 			Log.logger.error("get data error", e);
 		}
 	}

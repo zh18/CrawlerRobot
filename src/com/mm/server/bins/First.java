@@ -30,16 +30,19 @@ public class First implements Bin {
 		// scheme name
 		String name = null;
 		String rate = null;
-		try {
-			name = cmd.substring(cmd.indexOf("-n") + 2, cmd.indexOf("-r"))
-					.trim();
-			rate = cmd.substring(cmd.indexOf("-r") + 2).trim();
-		} catch (Exception e) {
-			name = cmd.substring(cmd.indexOf("-n")).trim();
+		if(cmd.substring(cmd.indexOf("first")+5).trim().equals("")) {
+			os.println("first -n scheme name");
+			return;
 		}
-		
+		else if (cmd.indexOf("-n") != -1) {
+			name = cmd.substring(cmd.indexOf("-n") + 2).trim();
+		}
+		if(name == null)  {
+			os.println("first -n scheme name");
+			return;
+		}
 		rate = "0";
-		Core.add(name, Idata.FIRST, rate);
+		Core.add(name, Idata.ONLY_FIRST, rate);
 	}
 
 }

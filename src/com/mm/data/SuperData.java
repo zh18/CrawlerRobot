@@ -76,7 +76,19 @@ public class SuperData implements Idata{
 	private void fromwhere(String process,String rate) throws Exception {
 		if (null == process || process.equals("#"))
 			process = FIRST;
-		if(process.equals(FIRST)){
+		if(process.equals(ONLY_FIRST)){
+			first0();
+			done();
+		}
+		else if(process.equals(ONLY_PRODUCT)){
+			pro0(Integer.parseInt(rate));
+			done();
+		}
+		else if(process.equals(ONLY_DOWNLOAD)){
+			download(Integer.parseInt(rate));
+			done();
+		}
+		else if(process.equals(FIRST)){
 			first0();
 			pro0(0);
 			download(0);

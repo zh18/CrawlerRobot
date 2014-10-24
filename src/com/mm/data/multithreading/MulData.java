@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.mm.data.Idata;
 import com.mm.data.struct.Selector;
+import com.mm.logger.Log;
 import com.mm.mul.Dispatcher;
 import com.mm.mul.Doable;
 import com.mm.mul.impl.DispatcherImpl;
@@ -15,19 +16,24 @@ import com.mm.mul.impl.PotImpl;
 import com.mm.spider.SpiderFactory;
 import com.mm.spider.SpiderFactoryImpl;
 import com.mm.stop.BreakPoint;
+import com.mm.util.FileC;
 import com.mm.util.SystemUtil;
 
 public class MulData implements Idata {
 
-	Selector selector = null;
-	BreakPoint breakpoint = null;
-	SpiderFactory sf = new SpiderFactoryImpl();
-	String name = null;
-	Set<String> error = null;
-	Doable<String> doable = null;
-	Dispatcher<String> dispatcher = new DispatcherImpl<String>();
+	private Selector selector = null;
+	private BreakPoint breakpoint = null;
+	private SpiderFactory sf = new SpiderFactoryImpl();
+	private String name = null;
+	private Set<String> error = null;
+	private Doable<String> doable = null;
+	private Dispatcher<String> dispatcher = new DispatcherImpl<String>();
 	private int nums = 5;
 
+	private FileC wUname = null;
+	private FileC wUFname = null;
+	private FileC wDname = null;
+	
 	public MulData() {
 		error = new HashSet<String>();
 	}
@@ -42,38 +48,50 @@ public class MulData implements Idata {
 
 	public void data() throws Exception {
 		if (!check(breakpoint.getPname())) {
-			System.out
-					.println("there is no " + breakpoint.getPname() + " file");
+			System.out.println("there is no " + breakpoint.getPname() + " file");
 			return;
 		}
 		Thread dis = new Thread(dispatcher);
-		breakpoint.setTotla(SystemUtil.getLineOfFile(selector.getSavepath()
-				+ uname));
+		String process = breakpoint.getPname();
+		if(process.equals(Idata.PRODUCT))
+			breakpoint.setTotla(SystemUtil.getLineOfFile(selector.getSavepath()
+					+ fname));
+		else if(process.equals(Idata.DOWNLOAD))
+			breakpoint.setTotla(SystemUtil.getLineOfFile(selector.getSavepath()
+					+ uname));
 		if (breakpoint.getRate().trim().equals("")) {
 			breakpoint.setRate("0");
 		}
 		BufferedReader br = null;
-		if (breakpoint.getPname().equals(Idata.PRODUCT)) {
-			doable = new DoPro(selector, breakpoint, sf, error);
-			br = new BufferedReader(new FileReader(selector.getSavepath()
-					+ fname));
-		} else if (breakpoint.getPname().equals(Idata.DOWNLOAD)) {
-			doable = new DoDown(selector, breakpoint, sf, error);
-			br = new BufferedReader(new FileReader(selector.getSavepath()
-					+ uname));
+		if(process.equals(Idata.PRODUCT)){
+			br = new BufferedReader(new FileReader(selector.getSavepath()+fname));
+//			wUname = new FileC(selector.getSavepath()+uname);
+//			wUFname = new FileC(selector.getSavepath()+"url-first.txt");
+		}
+		else if(process.equals(Idata.DOWNLOAD)){
+			br = new BufferedReader(new FileReader(selector.getSavepath()+uname));
+			wDname = new FileC();
 		}
 		for (int i = 0; i < nums; i++) {
-			dispatcher.addPot(new PotImpl<String>(i, doable));
+			if(process.equals(Idata.PRODUCT))
+				dispatcher.addPot(new PotImpl<String>(i, new DoPro(selector, breakpoint,sf, error,wUname,wUFname)));
+			else if(process.equals(Idata.DOWNLOAD))
+				dispatcher.addPot(new PotImpl<String>(i, new DoDown(selector,breakpoint,sf,error,wDname)));
 		}
 		dis.start();
 		String line = null;
 
+		
+		//# 临时变量  record 
+		int record = 0;
+		
 		int skip = 0;
 		// 从文件中获取要工作的序列
 		while ((line = br.readLine()) != null) {
 			if (breakpoint.getRate().trim().equals("")) {
 				breakpoint.setRate("0");
 			}
+			record ++;
 			if (++skip < Integer.parseInt(breakpoint.getRate()))
 				continue;
 			if (dispatcher.full()) {
@@ -88,9 +106,28 @@ public class MulData implements Idata {
 		br.close();
 		dispatcher.live(false);
 		dis.join();
+		done();
+		try {
+			if(record < breakpoint.getTotal()){
+				throw new RuntimeException("Don't finish but out");
+			}
+		}catch(Exception e){
+			Log.logger.error("dont'finish but out "+record, e);
+		}
+		//关闭写入流
+		if(null != wDname )
+			wDname.close();
+//		wDname.close();
+//		wUFname.close();
+//		wUname.close();
 		SystemUtil.writeColl(error, selector.getSavepath() + ename);
 	}
 
+	public void addPots(){
+		//first arg does not matter
+		dispatcher.addPot(new PotImpl<String>(1, doable));
+	}
+	
 	public void setFactory(SpiderFactory factory) {
 		this.sf = factory;
 	}
@@ -131,5 +168,9 @@ public class MulData implements Idata {
 
 	public void setError(Set<String> error) {
 
+	}
+	
+	public void done(){
+		breakpoint.setPname(DONE);
 	}
 }

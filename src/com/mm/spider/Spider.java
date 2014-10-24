@@ -158,6 +158,6 @@ public class Spider implements ISpider {
 		SystemUtil
 				.write("/home/public/Desktop/test.html",
 						(new Spider()
-								.spider("http://www.amazon.cn/s/ref=sr_nr_n_0/477-2323808-0521745?rh=n%3A2127215051%2Cn%3A!2127216051%2Cn%3A43234071%2Cn%3A43236071%2Cn%3A43237071&bbn=43236071&ie=UTF8&qid=1414037678&rnid=43236071")));
+								.spider("http://category.dangdang.com/cid4007491.html#ddclick?act=clickcat&pos=0_0_0_m&cat=4002286&key=&qinfo=&pinfo=&minfo=2071_1_48&ninfo=&custid=&permid=20141023163319374270705678942680945&ref=&rcount=&type=&t=1414053199000")));
 	}
 }
