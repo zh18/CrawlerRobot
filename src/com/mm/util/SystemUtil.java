@@ -30,6 +30,7 @@ import java.util.Set;
 import org.junit.runner.Runner;
 
 import com.mm.logger.Log;
+import com.sun.swing.internal.plaf.synth.resources.synth;
 
 public class SystemUtil {
 	
@@ -480,8 +481,6 @@ public class SystemUtil {
 		return result;
 	}
 
-	public static void main(String[] args) {
-		
-	}
-
+	
+	
 }

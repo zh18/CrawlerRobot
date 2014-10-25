@@ -10,9 +10,7 @@ public class FileC {
 	private BufferedWriter bw = null;
 	
 	
-	public FileC(){
-		
-	}
+	public FileC(){}
 	
 	public FileC (String path) throws IOException {
 		this.path = path;

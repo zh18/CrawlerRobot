@@ -25,12 +25,9 @@ public class Shell{
 //		if(true) {
 			ps.println("\n Welcome to Crawler Robot ! ");
 			for(;;){
-				try {
-					ps.print(name+"@"+InetAddress.getLocalHost().getHostName().toString()+":~$ ");
-					ps.flush();
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
+//				ps.print(name+"@"+InetAddress.getLocalHost().getHostName().toString()+":~$ ");
+				ps.print(name+" > ");
+				ps.flush();
 				cmd = scan.nextLine();
 				if (cmd.equals("")) continue;
 				if (cmd.equals("quit") || cmd.equals("-q")) 

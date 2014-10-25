@@ -127,10 +127,49 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 			currentpot ++;
 	}
 	
+	/**
+	 * 不用cins缓冲，直接把链接发到dispatcher到pots里
+	 * 
+	 * 找到<tt>平均分配的pot</tt>查看它满没满，如果满了，则随便找一个空的，如果没满，则插入
+	 */
+	public void dispatcher(T t){
+		Pot<T> temp = pots.get(currentpot%pots.size());
+		if(null != temp && temp.visiable() && !temp.full()) {
+			temp.put(t);
+		}
+		else {
+			while(true){
+				for(Pot<T> p:pots){
+					// 只有当成功插入时才返回
+					if(null != p && p.visiable() && !p.full()){
+						p.put(t);
+						break;
+					}
+					try {
+						Thread.sleep(50);
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		if(currentpot >= Integer.MAX_VALUE) currentpot = 0;
+		else
+			currentpot ++;
+	}
+	
 	public void cin(T t) {
 		if(null != cins){
 			synchronized (cins) {
-				cins.add(t);
+				while(full()){
+					try {
+						Thread.sleep(50);
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+//				cins.add(t);
+				dispatcher(t);
 			}
 			synchronized (this) {
 				try {
@@ -142,6 +181,22 @@ public class DispatcherImpl<T> implements Dispatcher<T>{
 		}
 	}
 
+	public void live(){
+		alive = false;
+		cutAllPots();
+	}
+	
+	public void doing(){
+		while(!potsLeaking()){
+			try {
+				Thread.sleep(50);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
 	public void cin(Collection<T> col) {
 		if(null != cins){
 			synchronized(cins){

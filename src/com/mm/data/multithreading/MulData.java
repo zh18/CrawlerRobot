@@ -51,7 +51,7 @@ public class MulData implements Idata {
 			System.out.println("there is no " + breakpoint.getPname() + " file");
 			return;
 		}
-		Thread dis = new Thread(dispatcher);
+//		Thread dis = new Thread(dispatcher);
 		String process = breakpoint.getPname();
 		if(process.equals(Idata.PRODUCT))
 			breakpoint.setTotla(SystemUtil.getLineOfFile(selector.getSavepath()
@@ -78,7 +78,7 @@ public class MulData implements Idata {
 			else if(process.equals(Idata.DOWNLOAD))
 				dispatcher.addPot(new PotImpl<String>(i, new DoDown(selector,breakpoint,sf,error,wDname)));
 		}
-		dis.start();
+//		dis.start();
 		String line = null;
 
 		
@@ -105,7 +105,7 @@ public class MulData implements Idata {
 		}
 		br.close();
 		dispatcher.live(false);
-		dis.join();
+		dispatcher.doing();
 		done();
 		try {
 			if(record < breakpoint.getTotal()){

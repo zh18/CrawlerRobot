@@ -195,5 +195,14 @@ public final class Core {
 		return false;
 	}
 	
+	public static final List<Task> getAllRunningTask(){
+		List<Task> tk = new ArrayList<Task>();
+		Task temp = null;
+		for(Thread t:allthread){
+			if(t.isAlive() && (temp = getTask(t.getName())).getProcess().equals(Task.RUNNING))
+				tk.add(temp);
+		}
+		return tk;
+	}
 	
 }

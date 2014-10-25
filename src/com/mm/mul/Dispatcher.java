@@ -33,4 +33,8 @@ public interface Dispatcher<T>  extends Runnable{
 	public boolean full();
 	
 	public void setDoable(Doable<T> doable);
+	
+	public void live();
+	
+	public void doing();
 }

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.mm.data.Idata;
 import com.mm.data.struct.Selector;
+import com.mm.logger.Log;
 import com.mm.mul.Doable;
 import com.mm.spider.ISpider;
 import com.mm.spider.SpiderFactory;
@@ -45,6 +46,7 @@ public class DoDown implements Doable<String> {
 			String html = spider.spider(t);
 			File f = null;
 			if (html == null) {
+				Log.logger.warn("html is null");
 				error.add(t);
 				return;
 			}
@@ -66,12 +68,9 @@ public class DoDown implements Doable<String> {
 				uDname.setPath(path);
 			}
 			uDname.write(Idata.mark + t + Idata.mark + "\n" + html);
-			
-			synchronized (bp) {
-				bp.incRate();	
-			}
+			bp.incRate();	
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.logger.warn("do down error", e);
 		}
 	}
 }
